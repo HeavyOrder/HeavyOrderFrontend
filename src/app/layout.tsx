@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_KR, JetBrains_Mono } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import { Header, Footer } from '@/components/layout';
 import Providers from '@/components/Providers';
+import ClarityAnalytics from '@/components/ClarityAnalytics';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['latin'],
@@ -29,6 +31,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${notoSansKR.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        <GoogleAnalytics gaId="G-MJ2BKC0RFK" />
+        <ClarityAnalytics />
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header />
