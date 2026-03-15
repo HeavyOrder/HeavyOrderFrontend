@@ -60,8 +60,8 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-120px)] flex items-center justify-center py-12 px-4">
       <Card className="w-full max-w-sm">
         <div className="text-center mb-6">
-          <h1 className="text-xl font-bold text-[#f5f5f5]">로그인</h1>
-          <p className="text-sm text-[#666] mt-1">HeavyOrder에 오신 것을 환영합니다</p>
+          <h1 className="text-xl font-bold text-[#0f172a]">로그인</h1>
+          <p className="text-base text-[#475569] mt-1">HeavyOrder에 오신 것을 환영합니다</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -85,9 +85,9 @@ export default function LoginPage() {
             required
           />
 
-          {/* 에러 메시지 (다크 테마) */}
+          {/* 에러 메시지 (라이트 테마 고대비) */}
           {error && (
-            <div className="bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 p-3 rounded-lg text-sm">
+            <div className="bg-[#fef2f2] text-[#b91c1c] border border-[#fecaca] p-3 rounded-lg text-base">
               {error}
             </div>
           )}
@@ -98,9 +98,9 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-[#666]">
+          <p className="text-base text-[#475569]">
             계정이 없으신가요?{' '}
-            <Link href="/auth/register" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors duration-150">
+            <Link href="/auth/register" className="text-[#1d4ed8] font-semibold hover:text-[#1e40af] transition-colors duration-150">
               회원가입
             </Link>
           </p>

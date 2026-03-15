@@ -13,28 +13,30 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-[#a0a0a0] mb-1.5">
+          // 노년층 기준: 큰 라벨, 고대비 색상
+          <label className="block text-base font-semibold text-[#1e293b] mb-2">
             {label}
-            {props.required && <span className="text-[#ef4444] ml-1">*</span>}
+            {props.required && <span className="text-[#b91c1c] ml-1">*</span>}
           </label>
         )}
 
         <input
           ref={ref}
           className={`
-            w-full px-3 py-2 rounded-lg text-sm
-            bg-[#111] border text-[#e5e5e5]
-            placeholder:text-[#666]
-            focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/30 focus:border-[#3b82f6]
+            w-full px-4 py-3.5 rounded-lg text-lg
+            bg-white border-2 text-[#1e293b]
+            placeholder:text-[#94a3b8]
+            focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/20 focus:border-[#1d4ed8]
             disabled:opacity-40 disabled:cursor-not-allowed
-            ${error ? 'border-[#ef4444]' : 'border-[#2a2a2a]'}
+            transition-colors duration-150
+            ${error ? 'border-[#b91c1c]' : 'border-[#e2e8f0]'}
             ${className}
           `}
           {...props}
         />
 
-        {error && <p className="mt-1 text-xs text-[#ef4444]">{error}</p>}
-        {helperText && !error && <p className="mt-1 text-xs text-[#666]">{helperText}</p>}
+        {error && <p className="mt-1.5 text-sm text-[#b91c1c]">{error}</p>}
+        {helperText && !error && <p className="mt-1.5 text-sm text-[#475569]">{helperText}</p>}
       </div>
     );
   }

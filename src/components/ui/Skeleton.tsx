@@ -6,23 +6,23 @@ interface SkeletonProps {
   count?: number;                           // 반복 횟수
 }
 
-// 로딩 스켈레톤 컴포넌트
-// 데이터 로딩 중 placeholder로 사용
+// 로딩 스켈레톤 컴포넌트 (노년층 라이트 테마)
 export default function Skeleton({
   variant = 'text',
   count = 1,
 }: SkeletonProps) {
   const items = Array.from({ length: count }, (_, i) => i);
 
-  // text 형태: 한 줄 막대
+  // text 형태: 한 줄 막대 (고정 너비로 SSR hydration 버그 방지)
+  const textWidths = ['75%', '85%', '60%', '80%', '70%'];
   if (variant === 'text') {
     return (
       <>
         {items.map((i) => (
           <div
             key={i}
-            className="h-4 bg-[#1a1a1a] animate-pulse rounded mb-2 last:mb-0"
-            style={{ width: `${70 + Math.random() * 30}%` }}
+            className="h-5 bg-[#e2e8f0] animate-pulse rounded mb-2 last:mb-0"
+            style={{ width: textWidths[i % textWidths.length] }}
           />
         ))}
       </>
@@ -36,11 +36,11 @@ export default function Skeleton({
         {items.map((i) => (
           <div
             key={i}
-            className="bg-[#1a1a1a] animate-pulse rounded-xl border border-[#2a2a2a] p-5 mb-3 last:mb-0"
+            className="bg-[#f1f3f5] animate-pulse rounded-2xl border border-[#e2e8f0] p-6 mb-3 last:mb-0"
           >
-            <div className="h-4 bg-[#222] rounded w-1/3 mb-3" />
-            <div className="h-3 bg-[#222] rounded w-2/3 mb-2" />
-            <div className="h-3 bg-[#222] rounded w-1/2" />
+            <div className="h-5 bg-[#e2e8f0] rounded w-1/3 mb-3" />
+            <div className="h-4 bg-[#e2e8f0] rounded w-2/3 mb-2" />
+            <div className="h-4 bg-[#e2e8f0] rounded w-1/2" />
           </div>
         ))}
       </>
@@ -52,9 +52,9 @@ export default function Skeleton({
     return (
       <>
         {items.map((i) => (
-          <tr key={i} className="border-b border-[#2a2a2a]">
-            <td colSpan={100} className="px-4 py-3">
-              <div className="h-4 bg-[#1a1a1a] animate-pulse rounded w-full" />
+          <tr key={i} className="border-b border-[#f1f3f5]">
+            <td colSpan={100} className="px-5 py-4">
+              <div className="h-5 bg-[#e2e8f0] animate-pulse rounded w-full" />
             </td>
           </tr>
         ))}

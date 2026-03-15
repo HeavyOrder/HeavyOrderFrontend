@@ -16,8 +16,7 @@ interface ConfirmModalProps {
   loading?: boolean;           // 확인 버튼 로딩 상태
 }
 
-// 확인/취소 모달 컴포넌트
-// Modal 기반, 위험/경고/정보 변형 지원
+// 확인/취소 모달 컴포넌트 (노년층 라이트 테마)
 export default function ConfirmModal({
   isOpen,
   onClose,
@@ -38,8 +37,8 @@ export default function ConfirmModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
-      {/* 메시지 */}
-      <p className="text-sm text-[#a0a0a0] mb-6">{message}</p>
+      {/* 노년층 기준: 큰 메시지 텍스트, 고대비 */}
+      <p className="text-base text-[#475569] mb-8">{message}</p>
 
       {/* 버튼 영역 */}
       <div className="flex gap-3 justify-end">

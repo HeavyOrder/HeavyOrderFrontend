@@ -11,8 +11,7 @@ interface SearchBarProps {
   children?: ReactNode;       // 추가 필터 슬롯
 }
 
-// 검색바 + 필터 슬롯 컴포넌트
-// 부품 검색, 주문 검색 등에 사용
+// 검색바 + 필터 슬롯 컴포넌트 (노년층 라이트 테마)
 export default function SearchBar({
   placeholder = '검색어를 입력하세요',
   value,
@@ -29,11 +28,11 @@ export default function SearchBar({
     <div className="flex flex-wrap gap-3 items-center">
       {/* 검색 입력 필드 */}
       <div className="relative flex-1 min-w-[200px]">
-        {/* 돋보기 아이콘 */}
+        {/* 돋보기 아이콘 - 노년층 기준: 더 크게 */}
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-[#666]"
-          width="16"
-          height="16"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94a3b8]"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -50,10 +49,11 @@ export default function SearchBar({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="
-            w-full pl-10 pr-3 py-2 rounded-lg text-sm
-            bg-[#111] border border-[#2a2a2a] text-[#e5e5e5]
-            placeholder:text-[#666]
-            focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/30 focus:border-[#3b82f6]
+            w-full pl-12 pr-4 py-3.5 rounded-lg text-lg
+            bg-white border-2 border-[#e2e8f0] text-[#1e293b]
+            placeholder:text-[#94a3b8]
+            focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/20 focus:border-[#1d4ed8]
+            transition-colors duration-150
           "
         />
       </div>
@@ -61,12 +61,12 @@ export default function SearchBar({
       {/* 추가 필터 슬롯 (셀렉트 등) */}
       {children}
 
-      {/* 검색 버튼 */}
+      {/* 검색 버튼 - 노년층 기준: 입력 필드와 높이 일치, 큰 텍스트 */}
       <button
         onClick={onSearch}
         className="
-          px-4 py-2 rounded-lg text-sm font-medium
-          bg-[#3b82f6] text-white hover:bg-[#2563eb]
+          px-5 py-3.5 rounded-lg text-lg font-semibold
+          bg-[#1d4ed8] text-white hover:bg-[#1e40af]
           transition-colors duration-150
         "
       >

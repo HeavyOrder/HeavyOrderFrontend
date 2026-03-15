@@ -111,21 +111,21 @@ function RegisterForm() {
   return (
     <Card className="w-full max-w-sm">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-[#f5f5f5]">회원가입</h1>
-        <p className="text-sm text-[#666] mt-1">HeavyOrder에 가입하세요</p>
+        <h1 className="text-xl font-bold text-[#0f172a]">회원가입</h1>
+        <p className="text-base text-[#475569] mt-1">HeavyOrder에 가입하세요</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 역할 선택 (다크 테마 select) */}
+        {/* 역할 선택 (라이트 테마 select) */}
         <div>
-          <label className="block text-sm font-medium text-[#a0a0a0] mb-1">
-            가입 유형 <span className="text-[#ef4444]">*</span>
+          <label className="block text-base font-semibold text-[#1e293b] mb-2">
+            가입 유형 <span className="text-[#b91c1c]">*</span>
           </label>
           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
-            className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-sm text-[#e5e5e5] focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/40 focus:border-[#3b82f6] transition-colors duration-150"
+            className="w-full px-4 py-3.5 bg-white border-2 border-[#e2e8f0] rounded-lg text-lg text-[#1e293b] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/20 focus:border-[#1d4ed8] transition-colors duration-150"
           >
             {Object.entries(roleLabels).map(([value, label]) => (
               <option key={value} value={value}>
@@ -210,9 +210,9 @@ function RegisterForm() {
           required
         />
 
-        {/* 에러 메시지 (다크 테마) */}
+        {/* 에러 메시지 (라이트 테마 고대비) */}
         {error && (
-          <div className="bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 p-3 rounded-lg text-sm">
+          <div className="bg-[#fef2f2] text-[#b91c1c] border border-[#fecaca] p-3 rounded-lg text-base">
             {error}
           </div>
         )}
@@ -223,9 +223,9 @@ function RegisterForm() {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-[#666]">
+        <p className="text-base text-[#475569]">
           이미 계정이 있으신가요?{' '}
-          <Link href="/auth/login" className="text-[#3b82f6] hover:text-[#60a5fa] transition-colors duration-150">
+          <Link href="/auth/login" className="text-[#1d4ed8] font-semibold hover:text-[#1e40af] transition-colors duration-150">
             로그인
           </Link>
         </p>
@@ -241,8 +241,8 @@ export default function RegisterPage() {
       <Suspense fallback={
         <Card className="w-full max-w-sm">
           <div className="text-center py-8">
-            <div className="animate-spin w-5 h-5 border-2 border-[#3b82f6] border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-sm text-[#666] mt-4">로딩중...</p>
+            <div className="animate-spin w-6 h-6 border-2 border-[#1d4ed8] border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-base text-[#475569] mt-4">로딩중...</p>
           </div>
         </Card>
       }>

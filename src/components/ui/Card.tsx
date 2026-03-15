@@ -22,19 +22,19 @@ export default function Card({
   return (
     <div
       className={`
-        bg-[#111] border border-[#2a2a2a] rounded-xl overflow-hidden
-        ${hoverable ? 'hover:border-[#333] transition-colors duration-150 cursor-pointer' : ''}
+        bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-sm
+        ${hoverable ? 'hover:border-[#1d4ed8]/30 hover:shadow-md transition-all duration-200 cursor-pointer' : ''}
         ${className}
       `}
       onClick={onClick}
     >
       {(title || subtitle) && (
-        <div className="px-5 py-4 border-b border-[#2a2a2a]">
-          {title && <h3 className="text-base font-semibold text-[#f5f5f5]">{title}</h3>}
-          {subtitle && <p className="text-sm text-[#a0a0a0] mt-0.5">{subtitle}</p>}
+        <div className="px-6 py-5 border-b border-[#f1f3f5]">
+          {title && <h3 className="text-lg font-bold text-[#0f172a]">{title}</h3>}
+          {subtitle && <p className="text-base text-[#475569] mt-1">{subtitle}</p>}
         </div>
       )}
-      <div className="px-5 py-4">{children}</div>
+      <div className="px-6 py-5">{children}</div>
     </div>
   );
 }

@@ -86,6 +86,7 @@ export interface PartResponse {
   supplier: string; // 공급사명
   name: string;
   price: number; // BigDecimal -> number
+  imageUrl: string | null; // Cloudinary 이미지 URL
 }
 
 // 부품 상세 응답 DTO

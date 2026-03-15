@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  /* 배경 계층 */
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --bg-tertiary: #1a1a1a;
-  --bg-elevated: #222222;
+  /* 배경 계층 - 라이트 테마 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  --bg-elevated: #ffffff;
 
   /* 보더 */
-  --border-primary: #2a2a2a;
-  --border-secondary: #333333;
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
 
-  /* 텍스트 */
-  --text-heading: #f5f5f5;
-  --text-primary: #e5e5e5;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
+  /* 텍스트 - 고대비 (WCAG AAA) */
+  --text-heading: #0f172a;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 
-  /* 액센트 */
-  --accent-blue: #3b82f6;
-  --accent-amber: #f59e0b;
-  --accent-green: #22c55e;
-  --accent-red: #ef4444;
-  --accent-orange: #f97316;
+  /* 액센트 - 라이트 배경용 고대비 */
+  --accent-blue: #1d4ed8;
+  --accent-amber: #b45309;
+  --accent-green: #15803d;
+  --accent-red: #b91c1c;
+  --accent-orange: #c2410c;
 
   --background: var(--bg-primary);
   --foreground: var(--text-primary);
@@ -39,29 +39,32 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* 노년층 가독성: 18px 기본 폰트, 넓은 줄 간격 */
+  font-size: 18px;
+  line-height: 1.7;
 }
 
-/* 스크롤바 다크 테마 */
+/* 스크롤바 라이트 테마 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #111;
+  background: #f1f3f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 3px;
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #94a3b8;
 }
 
-/* select 옵션 다크 테마 */
+/* select 옵션 라이트 테마 */
 option {
-  background: #222;
-  color: #e5e5e5;
+  background: #ffffff;
+  color: #1e293b;
 }

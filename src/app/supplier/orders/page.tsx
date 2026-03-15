@@ -62,20 +62,20 @@ export default function SupplierOrders() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-xl font-bold text-[#f5f5f5] mb-1">주문 관리</h1>
-      <p className="text-sm text-[#666] mb-6">수신된 주문을 확인하고 상태를 관리합니다</p>
+      <h1 className="text-xl font-bold text-[#1e293b] mb-1">주문 관리</h1>
+      <p className="text-sm text-[#475569] mb-6">수신된 주문을 확인하고 상태를 관리합니다</p>
 
       <Tabs tabs={tabs} activeKey={activeTab} onChange={setActiveTab} />
 
-      <div className="mt-4 bg-[#111] border border-[#2a2a2a] rounded-xl overflow-hidden">
+      <div className="mt-4 bg-white border border-[#e2e8f0] rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-5"><Skeleton variant="table-row" count={5} /></div>
         ) : filtered.length === 0 ? (
           <EmptyState title="주문이 없습니다" />
         ) : (
-          <div className="divide-y divide-[#2a2a2a]">
+          <div className="divide-y divide-[#e2e8f0]">
             {/* 테이블 헤더 */}
-            <div className="hidden md:grid grid-cols-[1fr_120px_100px_100px_140px] gap-4 px-5 py-3 bg-[#1a1a1a] text-xs text-[#666] uppercase tracking-wider">
+            <div className="hidden md:grid grid-cols-[1fr_120px_100px_100px_140px] gap-4 px-5 py-3 bg-[#f8f9fa] text-xs text-[#475569] uppercase tracking-wider">
               <span>수령인</span><span>금액</span><span>상태</span><span>날짜</span><span>액션</span>
             </div>
             {filtered.map(order => {
@@ -85,25 +85,25 @@ export default function SupplierOrders() {
                 <div key={order.orderId}>
                   {/* 주문 행 */}
                   <div
-                    className="grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_140px] gap-2 md:gap-4 px-5 py-3 hover:bg-[#1a1a1a] transition-colors items-center cursor-pointer"
+                    className="grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_140px] gap-2 md:gap-4 px-5 py-3 hover:bg-[#f8f9fa] transition-colors items-center cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : order.orderId)}
                   >
-                    <span className="text-sm text-[#e5e5e5]">{order.receiverName}</span>
-                    <span className="text-sm text-[#e5e5e5] font-mono">{formatCurrency(total)}</span>
+                    <span className="text-sm text-[#1e293b]">{order.receiverName}</span>
+                    <span className="text-sm text-[#1e293b] font-mono">{formatCurrency(total)}</span>
                     <OrderStatusBadge status={order.orderStatus} />
-                    <span className="text-xs text-[#666]">{formatDate(order.orderedAt)}</span>
+                    <span className="text-xs text-[#475569]">{formatDate(order.orderedAt)}</span>
                     <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                       {order.orderStatus === 'PENDING' && (
                         <>
                           <button
                             onClick={() => setStatusAction({ orderId: order.orderId, toStatus: 'APPROVED', label: '승인' })}
-                            className="text-xs px-2.5 py-1 rounded bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20 hover:bg-[#22c55e]/20 transition-colors"
+                            className="text-xs px-2.5 py-1 rounded bg-[#15803d]/10 text-[#15803d] border border-[#bbf7d0] hover:bg-[#15803d]/20 transition-colors"
                           >
                             승인
                           </button>
                           <button
                             onClick={() => setStatusAction({ orderId: order.orderId, toStatus: 'CANCELED', label: '거절' })}
-                            className="text-xs px-2.5 py-1 rounded bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 hover:bg-[#ef4444]/20 transition-colors"
+                            className="text-xs px-2.5 py-1 rounded bg-[#fef2f2] text-[#b91c1c] border border-[#fecaca] hover:bg-[#ef4444]/20 transition-colors"
                           >
                             거절
                           </button>
@@ -112,7 +112,7 @@ export default function SupplierOrders() {
                       {order.orderStatus === 'APPROVED' && (
                         <button
                           onClick={() => setStatusAction({ orderId: order.orderId, toStatus: 'SHIPPED', label: '배송 완료' })}
-                          className="text-xs px-2.5 py-1 rounded bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20 hover:bg-[#3b82f6]/20 transition-colors"
+                          className="text-xs px-2.5 py-1 rounded bg-[#1d4ed8]/10 text-[#1d4ed8] border border-[#bfdbfe] hover:bg-[#1d4ed8]/20 transition-colors"
                         >
                           배송 완료
                         </button>
@@ -122,30 +122,30 @@ export default function SupplierOrders() {
 
                   {/* 상세 패널 */}
                   {isExpanded && (
-                    <div className="px-5 pb-4 bg-[#0d0d0d] border-t border-[#2a2a2a]">
+                    <div className="px-5 pb-4 bg-white border-t border-[#e2e8f0]">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                         {/* 수령인 정보 */}
                         <div className="space-y-2">
-                          <h4 className="text-xs text-[#666] uppercase tracking-wider">수령인 정보</h4>
+                          <h4 className="text-xs text-[#475569] uppercase tracking-wider">수령인 정보</h4>
                           <div className="text-sm space-y-1">
-                            <p className="text-[#e5e5e5]">{order.receiverName}</p>
-                            <p className="text-[#a0a0a0] font-mono">{order.phoneNumber}</p>
-                            <p className="text-[#a0a0a0]">{order.address}</p>
+                            <p className="text-[#1e293b]">{order.receiverName}</p>
+                            <p className="text-[#475569] font-mono">{order.phoneNumber}</p>
+                            <p className="text-[#475569]">{order.address}</p>
                           </div>
                         </div>
                         {/* 주문 품목 */}
                         <div className="space-y-2">
-                          <h4 className="text-xs text-[#666] uppercase tracking-wider">주문 품목</h4>
+                          <h4 className="text-xs text-[#475569] uppercase tracking-wider">주문 품목</h4>
                           <div className="space-y-1">
                             {order.items.map(item => (
                               <div key={item.productId} className="flex justify-between text-sm">
-                                <span className="text-[#e5e5e5]">{item.productName} x{item.quantity}</span>
-                                <span className="text-[#a0a0a0] font-mono">{formatCurrency(item.itemTotalAmount)}</span>
+                                <span className="text-[#1e293b]">{item.productName} x{item.quantity}</span>
+                                <span className="text-[#475569] font-mono">{formatCurrency(item.itemTotalAmount)}</span>
                               </div>
                             ))}
-                            <div className="flex justify-between text-sm pt-2 border-t border-[#2a2a2a]">
-                              <span className="text-[#f5f5f5] font-medium">합계</span>
-                              <span className="text-[#f5f5f5] font-mono font-medium">{formatCurrency(total)}</span>
+                            <div className="flex justify-between text-sm pt-2 border-t border-[#e2e8f0]">
+                              <span className="text-[#1e293b] font-medium">합계</span>
+                              <span className="text-[#1e293b] font-mono font-medium">{formatCurrency(total)}</span>
                             </div>
                           </div>
                         </div>

@@ -10,27 +10,26 @@ interface BadgeProps {
   size?: 'sm' | 'md';
 }
 
-// variant별 색상 매핑
+// 노년층 기준: 투명도 배경 → 불투명 고대비 배경 (WCAG AAA)
 const variantStyles: Record<BadgeProps['variant'], string> = {
-  pending: 'bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/20',
-  approved: 'bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20',
-  shipped: 'bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/20',
-  canceled: 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/20',
-  info: 'bg-[#3b82f6]/10 text-[#3b82f6] border-[#3b82f6]/20',
-  warning: 'bg-[#f59e0b]/10 text-[#f59e0b] border-[#f59e0b]/20',
-  success: 'bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/20',
-  danger: 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/20',
-  default: 'bg-[#1a1a1a] text-[#a0a0a0] border-[#2a2a2a]',
+  pending:  'bg-[#fffbeb] text-[#b45309] border-[#fde68a]',
+  approved: 'bg-[#eff6ff] text-[#1d4ed8] border-[#bfdbfe]',
+  shipped:  'bg-[#f0fdf4] text-[#15803d] border-[#bbf7d0]',
+  canceled: 'bg-[#fef2f2] text-[#b91c1c] border-[#fecaca]',
+  info:     'bg-[#eff6ff] text-[#1d4ed8] border-[#bfdbfe]',
+  warning:  'bg-[#fffbeb] text-[#b45309] border-[#fde68a]',
+  success:  'bg-[#f0fdf4] text-[#15803d] border-[#bbf7d0]',
+  danger:   'bg-[#fef2f2] text-[#b91c1c] border-[#fecaca]',
+  default:  'bg-[#f8f9fa] text-[#475569] border-[#e2e8f0]',
 };
 
-// 크기별 스타일
+// 노년층 기준: text-xs → text-sm으로 크기 업
 const sizeStyles: Record<NonNullable<BadgeProps['size']>, string> = {
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-2.5 py-1 text-xs',
+  sm: 'px-2.5 py-1 text-sm',
+  md: 'px-3 py-1.5 text-sm',
 };
 
 // 상태 뱃지 컴포넌트
-// 주문 상태, 알림 등에 사용
 export default function Badge({
   children,
   variant,
@@ -39,7 +38,7 @@ export default function Badge({
   return (
     <span
       className={`
-        inline-flex items-center font-medium rounded-md border
+        inline-flex items-center font-semibold rounded-md border
         ${variantStyles[variant]}
         ${sizeStyles[size]}
       `}
@@ -50,7 +49,6 @@ export default function Badge({
 }
 
 // 주문 상태 전용 뱃지 헬퍼
-// OrderStatus를 넘기면 자동으로 한글 라벨 + 색상 매핑
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {
   const variantMap: Record<OrderStatus, BadgeProps['variant']> = {
     PENDING: 'pending',

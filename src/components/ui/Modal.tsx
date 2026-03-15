@@ -11,8 +11,7 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg'; // 모달 크기
 }
 
-// 기본 모달 컴포넌트
-// 오버레이 + 센터 패널 구성
+// 기본 모달 컴포넌트 (노년층 라이트 테마)
 export default function Modal({
   isOpen,
   onClose,
@@ -53,28 +52,28 @@ export default function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* 오버레이 (클릭 시 닫기) */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* 모달 패널 */}
+      {/* 모달 패널 - 노년층 기준: 흰 배경, 큰 텍스트 */}
       <div
         className={`
           relative w-full ${sizeClasses[size]}
-          bg-[#222] border border-[#333] rounded-xl
+          bg-white border border-[#e2e8f0] rounded-2xl
           shadow-2xl
         `}
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#333]">
-          <h2 className="text-lg font-semibold text-[#f5f5f5]">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#f1f3f5]">
+          <h2 className="text-xl font-bold text-[#0f172a]">{title}</h2>
 
-          {/* X 닫기 버튼 */}
+          {/* X 닫기 버튼 - 노년층 기준: 터치 타겟 확대 */}
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-[#666] hover:text-[#e5e5e5] hover:bg-[#333] transition-colors"
+            className="p-2 rounded-lg text-[#94a3b8] hover:text-[#475569] hover:bg-[#f1f3f5] transition-colors"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -82,7 +81,7 @@ export default function Modal({
         </div>
 
         {/* 본문 */}
-        <div className="px-5 py-4">
+        <div className="px-6 py-5">
           {children}
         </div>
       </div>

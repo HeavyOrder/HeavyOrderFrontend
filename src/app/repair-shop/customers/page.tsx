@@ -74,12 +74,12 @@ export default function RepairShopCustomers() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-[#f5f5f5]">고객 관리</h1>
-          <p className="text-sm text-[#666] mt-1">고객 정보를 관리합니다</p>
+          <h1 className="text-xl font-bold text-[#1e293b]">고객 관리</h1>
+          <p className="text-sm text-[#475569] mt-1">고객 정보를 관리합니다</p>
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          className="px-4 py-2 text-sm font-medium bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition-colors"
+          className="px-4 py-2 text-sm font-medium bg-[#1d4ed8] text-white rounded-lg hover:bg-[#1e40af] transition-colors"
         >
           + 고객 등록
         </button>
@@ -91,28 +91,28 @@ export default function RepairShopCustomers() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="이름 또는 연락처로 검색..."
-          className="w-full sm:w-80 px-3 py-2 rounded-lg text-sm bg-[#111] border border-[#2a2a2a] text-[#e5e5e5] placeholder:text-[#666] focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/30"
+          className="w-full sm:w-80 px-3 py-2 rounded-lg text-sm bg-white border border-[#e2e8f0] text-[#1e293b] placeholder:text-[#475569] focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/20"
         />
       </div>
 
-      <div className="bg-[#111] border border-[#2a2a2a] rounded-xl overflow-hidden">
+      <div className="bg-white border border-[#e2e8f0] rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-5"><Skeleton variant="table-row" count={5} /></div>
         ) : filtered.length === 0 ? (
           <EmptyState title="고객이 없습니다" description="새 고객을 등록해보세요" />
         ) : (
-          <div className="divide-y divide-[#2a2a2a]">
-            <div className="hidden md:grid grid-cols-[60px_1fr_160px_80px] gap-4 px-5 py-3 bg-[#1a1a1a] text-xs text-[#666] uppercase tracking-wider">
+          <div className="divide-y divide-[#e2e8f0]">
+            <div className="hidden md:grid grid-cols-[60px_1fr_160px_80px] gap-4 px-5 py-3 bg-[#f8f9fa] text-xs text-[#475569] uppercase tracking-wider">
               <span>ID</span><span>이름</span><span>연락처</span><span></span>
             </div>
             {filtered.map(customer => (
-              <div key={customer.id} className="grid grid-cols-1 md:grid-cols-[60px_1fr_160px_80px] gap-2 md:gap-4 px-5 py-3 hover:bg-[#1a1a1a] transition-colors items-center">
-                <span className="text-sm text-[#666] font-mono">#{customer.id}</span>
-                <span className="text-sm text-[#e5e5e5]">{customer.name}</span>
-                <span className="text-sm text-[#a0a0a0] font-mono">{customer.phoneNumber || '-'}</span>
+              <div key={customer.id} className="grid grid-cols-1 md:grid-cols-[60px_1fr_160px_80px] gap-2 md:gap-4 px-5 py-3 hover:bg-[#f8f9fa] transition-colors items-center">
+                <span className="text-sm text-[#475569] font-mono">#{customer.id}</span>
+                <span className="text-sm text-[#1e293b]">{customer.name}</span>
+                <span className="text-sm text-[#475569] font-mono">{customer.phoneNumber || '-'}</span>
                 <button
                   onClick={() => openEdit(customer)}
-                  className="text-xs text-[#3b82f6] hover:text-[#60a5fa] transition-colors"
+                  className="text-xs text-[#1d4ed8] hover:text-[#1d4ed8] transition-colors"
                 >
                   수정
                 </button>

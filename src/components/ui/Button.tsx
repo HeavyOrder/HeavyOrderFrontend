@@ -20,19 +20,21 @@ export default function Button({
   disabled,
   ...props
 }: ButtonProps) {
+  // 노년층 기준: 라이트 배경 고대비 색상 (WCAG AAA)
   const variants = {
-    primary: 'bg-[#3b82f6] text-white hover:bg-[#2563eb] focus:ring-[#3b82f6]/40',
-    secondary: 'bg-[#1a1a1a] text-[#e5e5e5] hover:bg-[#222] border border-[#2a2a2a] focus:ring-[#333]/40',
-    outline: 'border border-[#333] text-[#3b82f6] bg-transparent hover:bg-[#3b82f6]/10 focus:ring-[#3b82f6]/20',
-    danger: 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30 hover:bg-[#ef4444]/20 focus:ring-[#ef4444]/20',
-    ghost: 'bg-transparent text-[#a0a0a0] hover:bg-[#1a1a1a] hover:text-[#e5e5e5] focus:ring-[#333]/20',
-    amber: 'bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/30 hover:bg-[#f59e0b]/20 focus:ring-[#f59e0b]/20',
+    primary: 'bg-[#1d4ed8] text-white hover:bg-[#1e40af] focus:ring-[#1d4ed8]/40',
+    secondary: 'bg-white text-[#1e293b] border border-[#e2e8f0] hover:bg-[#f8f9fa] hover:border-[#cbd5e1] focus:ring-[#94a3b8]/20',
+    outline: 'border-2 border-[#1d4ed8] text-[#1d4ed8] bg-transparent hover:bg-[#1d4ed8]/5 focus:ring-[#1d4ed8]/20',
+    danger: 'bg-[#fef2f2] text-[#b91c1c] border border-[#fecaca] hover:bg-[#fee2e2] focus:ring-[#b91c1c]/20',
+    ghost: 'bg-transparent text-[#475569] hover:bg-[#f1f3f5] hover:text-[#1e293b] focus:ring-[#94a3b8]/20',
+    amber: 'bg-[#fffbeb] text-[#b45309] border border-[#fde68a] hover:bg-[#fef3c7] focus:ring-[#b45309]/20',
   };
 
+  // 노년층 기준: 최소 48px 높이 보장
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-2.5 text-base',
+    sm: 'px-4 py-3 text-base',       // 높이 ~48px
+    md: 'px-5 py-3.5 text-lg',       // 높이 ~56px
+    lg: 'px-6 py-4 text-xl font-semibold', // 높이 ~60px
   };
 
   return (
@@ -51,7 +53,7 @@ export default function Button({
       {...props}
     >
       {loading && (
-        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
         </svg>

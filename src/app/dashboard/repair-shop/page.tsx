@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRoleGuard } from '@/lib/hooks';
 import { ordersApi, inventoryApi } from '@/lib/api';
-import { StatCard, Skeleton } from '@/components/ui';
+import { Skeleton } from '@/components/ui';
 import { OrderStatusBadge } from '@/components/ui/Badge';
 import { MyOrderListItem, InventoryResponse } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/utils';
@@ -31,7 +31,11 @@ export default function RepairShopDashboard() {
     load();
   }, [isAuthorized]);
 
-  if (authLoading || !isAuthorized) return <div className="min-h-[60vh] flex items-center justify-center"><Skeleton variant="card" count={4} /></div>;
+  if (authLoading || !isAuthorized) return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <Skeleton variant="card" count={4} />
+    </div>
+  );
 
   const pending = orders.filter(o => o.orderStatus === 'PENDING').length;
   const approved = orders.filter(o => o.orderStatus === 'APPROVED').length;
@@ -39,42 +43,135 @@ export default function RepairShopDashboard() {
   const lowStock = inventory.filter(i => i.stock <= 5).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-xl font-bold text-[#f5f5f5]">안녕하세요, {user?.businessName || user?.email}님</h1>
-        <p className="text-sm text-[#666] mt-1">공업사 대시보드</p>
-      </div>
+    <div className="min-h-screen bg-[#f8f9fa]">
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
 
-      {/* 스탯 카드 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <StatCard label="대기중 주문" value={loading ? '-' : pending} color="amber" />
-        <StatCard label="승인된 주문" value={loading ? '-' : approved} color="blue" />
-        <StatCard label="배송 완료" value={loading ? '-' : shipped} color="green" />
-        <StatCard label="재고 부족" value={loading ? '-' : lowStock} color="red" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* 최근 주문 */}
-        <div className="bg-[#111] border border-[#2a2a2a] rounded-xl">
-          <div className="px-5 py-4 border-b border-[#2a2a2a] flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-[#f5f5f5]">최근 주문</h2>
-            <Link href="/repair-shop/orders" className="text-xs text-[#3b82f6] hover:text-[#60a5fa]">전체 보기</Link>
+        {/* 인사말 카드 */}
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm px-6 py-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-[#0f172a]">
+                안녕하세요,<br />{user?.businessName || user?.email}님
+              </h1>
+              <p className="text-base text-[#475569] mt-1">오늘도 좋은 하루 되세요</p>
+            </div>
+            <span className="bg-[#eff6ff] text-[#1d4ed8] px-3 py-1.5 rounded-full text-base font-semibold">
+              공업사
+            </span>
           </div>
-          <div className="divide-y divide-[#2a2a2a]">
+        </div>
+
+        {/* 통계 카드 2×2 */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* 대기중 주문 */}
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm p-6 min-h-[120px] flex flex-col justify-between">
+            <div className="w-10 h-10 bg-[#fef3c7] rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-[#b45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#0f172a]">{loading ? '-' : pending}</div>
+              <div className="text-base text-[#475569] mt-1">대기중 주문</div>
+            </div>
+          </div>
+
+          {/* 승인된 주문 */}
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm p-6 min-h-[120px] flex flex-col justify-between">
+            <div className="w-10 h-10 bg-[#dbeafe] rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#0f172a]">{loading ? '-' : approved}</div>
+              <div className="text-base text-[#475569] mt-1">승인된 주문</div>
+            </div>
+          </div>
+
+          {/* 배송 완료 */}
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm p-6 min-h-[120px] flex flex-col justify-between">
+            <div className="w-10 h-10 bg-[#dcfce7] rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-[#15803d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#0f172a]">{loading ? '-' : shipped}</div>
+              <div className="text-base text-[#475569] mt-1">배송 완료</div>
+            </div>
+          </div>
+
+          {/* 재고 부족 */}
+          <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm p-6 min-h-[120px] flex flex-col justify-between">
+            <div className="w-10 h-10 bg-[#fee2e2] rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-[#b91c1c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#0f172a]">{loading ? '-' : lowStock}</div>
+              <div className="text-base text-[#475569] mt-1">재고 부족</div>
+            </div>
+          </div>
+        </div>
+
+        {/* 핵심 CTA 버튼 */}
+        <Link
+          href="/repair-shop/orders/new"
+          className="flex items-center justify-center gap-3 w-full py-5 text-xl font-bold bg-[#1d4ed8] text-white rounded-2xl hover:bg-[#1e40af] transition-colors duration-150 shadow-sm"
+        >
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          새 주문 작성
+        </Link>
+
+        {/* 빠른 메뉴 */}
+        <div className="grid grid-cols-3 gap-3">
+          <Link href="/repair-shop/orders" className="bg-white border border-[#e2e8f0] rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-[#1d4ed8]/40 hover:shadow-sm transition-all">
+            <svg className="w-8 h-8 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <span className="text-sm font-semibold text-[#1e293b] text-center">주문<br/>관리</span>
+          </Link>
+          <Link href="/repair-shop/inventory" className="bg-white border border-[#e2e8f0] rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-[#1d4ed8]/40 hover:shadow-sm transition-all">
+            <svg className="w-8 h-8 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+            <span className="text-sm font-semibold text-[#1e293b] text-center">재고<br/>관리</span>
+          </Link>
+          <Link href="/repair-shop/customers" className="bg-white border border-[#e2e8f0] rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-[#1d4ed8]/40 hover:shadow-sm transition-all">
+            <svg className="w-8 h-8 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span className="text-sm font-semibold text-[#1e293b] text-center">고객<br/>관리</span>
+          </Link>
+        </div>
+
+        {/* 최근 주문 */}
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-6 py-5 border-b border-[#f1f3f5] flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#0f172a]">최근 주문</h2>
+            <Link href="/repair-shop/orders" className="text-base font-semibold text-[#1d4ed8] hover:text-[#1e40af]">
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="divide-y divide-[#f1f3f5]">
             {loading ? (
-              <div className="p-5"><Skeleton variant="text" count={3} /></div>
+              <div className="p-6"><Skeleton variant="text" count={3} /></div>
             ) : orders.length === 0 ? (
-              <div className="p-8 text-center text-sm text-[#666]">주문 내역이 없습니다</div>
+              <div className="p-8 text-center text-base text-[#475569]">주문 내역이 없습니다</div>
             ) : (
               orders.slice(0, 5).map(order => (
-                <div key={order.id} className="px-5 py-3 flex items-center justify-between">
+                <div key={order.id} className="px-6 py-4 flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-[#e5e5e5]">{order.title}</p>
-                    <p className="text-xs text-[#666] mt-0.5 font-mono">{formatCurrency(order.totalAmount)}</p>
+                    <p className="text-base font-medium text-[#1e293b]">{order.title}</p>
+                    <p className="text-sm text-[#475569] mt-0.5 font-mono">{formatCurrency(order.totalAmount)}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-[#666]">{formatDate(order.orderTime)}</span>
+                  <div className="flex flex-col items-end gap-1.5">
                     <OrderStatusBadge status={order.orderStatus} />
+                    <span className="text-sm text-[#94a3b8]">{formatDate(order.orderTime)}</span>
                   </div>
                 </div>
               ))
@@ -82,29 +179,33 @@ export default function RepairShopDashboard() {
           </div>
         </div>
 
-        {/* 재고 부족 품목 */}
-        <div className="bg-[#111] border border-[#2a2a2a] rounded-xl">
-          <div className="px-5 py-4 border-b border-[#2a2a2a] flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-[#f5f5f5]">재고 부족 품목</h2>
-            <Link href="/repair-shop/inventory" className="text-xs text-[#3b82f6] hover:text-[#60a5fa]">전체 보기</Link>
-          </div>
-          <div className="divide-y divide-[#2a2a2a]">
-            {loading ? (
-              <div className="p-5"><Skeleton variant="text" count={3} /></div>
-            ) : inventory.filter(i => i.stock <= 5).length === 0 ? (
-              <div className="p-8 text-center text-sm text-[#666]">재고 부족 품목이 없습니다</div>
-            ) : (
-              inventory.filter(i => i.stock <= 5).slice(0, 5).map(item => (
-                <div key={item.inventoryId} className="px-5 py-3 flex items-center justify-between">
-                  <span className="text-sm text-[#e5e5e5]">{item.productName}</span>
-                  <span className={`text-sm font-mono ${item.stock === 0 ? 'text-[#ef4444]' : 'text-[#f59e0b]'}`}>
-                    {item.stock}개
+        {/* 재고 부족 알림 */}
+        {!loading && lowStock > 0 && (
+          <div className="bg-white border border-[#fecaca] rounded-2xl shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-[#fecaca] flex items-center justify-between bg-[#fef2f2]">
+              <div className="flex items-center gap-2">
+                <svg className="w-6 h-6 text-[#b91c1c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h2 className="text-lg font-bold text-[#b91c1c]">재고 부족 품목</h2>
+              </div>
+              <Link href="/repair-shop/inventory" className="text-base font-semibold text-[#b91c1c] hover:text-[#991b1b]">
+                관리하기 →
+              </Link>
+            </div>
+            <div className="divide-y divide-[#fef2f2]">
+              {inventory.filter(i => i.stock <= 5).slice(0, 5).map(item => (
+                <div key={item.inventoryId} className="px-6 py-4 flex items-center justify-between">
+                  <span className="text-base font-medium text-[#1e293b]">{item.productName}</span>
+                  <span className={`text-base font-bold font-mono ${item.stock === 0 ? 'text-[#b91c1c]' : 'text-[#b45309]'}`}>
+                    {item.stock === 0 ? '품절' : `${item.stock}개`}
                   </span>
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
       </div>
     </div>
   );

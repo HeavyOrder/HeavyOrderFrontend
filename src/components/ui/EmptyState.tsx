@@ -13,8 +13,7 @@ interface EmptyStateProps {
   };
 }
 
-// 데이터 없음 표시 컴포넌트
-// 테이블이나 리스트가 비어있을 때 사용
+// 데이터 없음 표시 컴포넌트 (노년층 라이트 테마)
 export default function EmptyState({
   title,
   description,
@@ -22,9 +21,9 @@ export default function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
-      {/* 아이콘: 빈 박스 */}
+      {/* 아이콘: 빈 박스 - 노년층 기준: 라이트 배경에 맞는 연한 색상 */}
       <svg
-        className="w-16 h-16 text-[#333] mb-4"
+        className="w-16 h-16 text-[#cbd5e1] mb-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -37,24 +36,24 @@ export default function EmptyState({
         />
       </svg>
 
-      {/* 제목 */}
-      <h3 className="text-base font-medium text-[#a0a0a0] mb-1">{title}</h3>
+      {/* 제목 - 노년층 기준: 더 크고 선명하게 */}
+      <h3 className="text-lg font-semibold text-[#475569] mb-1">{title}</h3>
 
       {/* 설명 */}
       {description && (
-        <p className="text-sm text-[#666] mb-4 text-center max-w-sm">
+        <p className="text-base text-[#64748b] mb-6 text-center max-w-sm">
           {description}
         </p>
       )}
 
-      {/* 액션 버튼/링크 */}
+      {/* 액션 버튼/링크 - 노년층 기준: 큰 버튼 */}
       {action && (
         action.href ? (
           <Link
             href={action.href}
             className="
-              px-4 py-2 rounded-lg text-sm font-medium
-              bg-[#3b82f6] text-white hover:bg-[#2563eb]
+              px-6 py-3.5 rounded-lg text-base font-semibold
+              bg-[#1d4ed8] text-white hover:bg-[#1e40af]
               transition-colors duration-150
             "
           >
@@ -64,8 +63,8 @@ export default function EmptyState({
           <button
             onClick={action.onClick}
             className="
-              px-4 py-2 rounded-lg text-sm font-medium
-              bg-[#3b82f6] text-white hover:bg-[#2563eb]
+              px-6 py-3.5 rounded-lg text-base font-semibold
+              bg-[#1d4ed8] text-white hover:bg-[#1e40af]
               transition-colors duration-150
             "
           >

@@ -14,11 +14,10 @@ interface TabsProps {
   onChange: (key: string) => void; // 탭 변경 핸들러
 }
 
-// 탭 필터 컴포넌트
-// 주문 상태별 필터링 등에 사용
+// 탭 필터 컴포넌트 (노년층 라이트 테마)
 export default function Tabs({ tabs, activeKey, onChange }: TabsProps) {
   return (
-    <div className="flex border-b border-[#2a2a2a]">
+    <div className="flex border-b border-[#e2e8f0]">
       {tabs.map((tab) => {
         const isActive = tab.key === activeKey;
         return (
@@ -26,22 +25,22 @@ export default function Tabs({ tabs, activeKey, onChange }: TabsProps) {
             key={tab.key}
             onClick={() => onChange(tab.key)}
             className={`
-              px-4 py-2.5 text-sm font-medium transition-colors duration-150
+              px-5 py-3.5 text-base font-semibold transition-colors duration-150
               border-b-2 -mb-px
               ${
                 isActive
-                  ? 'text-[#3b82f6] border-[#3b82f6]'
-                  : 'text-[#666] border-transparent hover:text-[#a0a0a0]'
+                  ? 'text-[#1d4ed8] border-[#1d4ed8]'
+                  : 'text-[#64748b] border-transparent hover:text-[#1e293b] hover:bg-[#f8f9fa]'
               }
             `}
           >
             {tab.label}
-            {/* 건수 뱃지 */}
+            {/* 건수 뱃지 - 노년층 기준: 더 큰 크기 */}
             {tab.count !== undefined && (
               <span
                 className={`
-                  ml-2 px-1.5 py-0.5 text-xs rounded-full
-                  ${isActive ? 'bg-[#3b82f6]/10 text-[#3b82f6]' : 'bg-[#1a1a1a] text-[#666]'}
+                  ml-2 px-2 py-0.5 text-sm rounded-full font-medium
+                  ${isActive ? 'bg-[#dbeafe] text-[#1d4ed8]' : 'bg-[#f1f3f5] text-[#475569]'}
                 `}
               >
                 {tab.count}

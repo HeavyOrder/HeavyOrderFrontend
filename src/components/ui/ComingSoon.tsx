@@ -13,7 +13,7 @@ export default function ComingSoon({ title, features }: ComingSoonProps) {
     <div className="flex flex-col items-center justify-center py-20 px-4">
       {/* 공구 아이콘 */}
       <svg
-        className="w-16 h-16 text-[#f59e0b] mb-4"
+        className="w-16 h-16 text-[#b45309] mb-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -27,20 +27,20 @@ export default function ComingSoon({ title, features }: ComingSoonProps) {
       </svg>
 
       {/* 제목 */}
-      <h2 className="text-xl font-semibold text-[#f5f5f5] mb-2">{title}</h2>
+      <h2 className="text-xl font-semibold text-[#1e293b] mb-2">{title}</h2>
 
       {/* "준비 중" 텍스트 */}
-      <p className="text-sm text-[#a0a0a0] mb-6">이 기능은 현재 준비 중입니다</p>
+      <p className="text-sm text-[#475569] mb-6">이 기능은 현재 준비 중입니다</p>
 
       {/* 예정 기능 목록 */}
-      <div className="bg-[#111] border border-[#2a2a2a] rounded-xl p-5 max-w-sm w-full">
-        <h3 className="text-sm font-medium text-[#a0a0a0] mb-3">예정된 기능</h3>
+      <div className="bg-white border border-[#e2e8f0] rounded-xl p-5 max-w-sm w-full">
+        <h3 className="text-sm font-medium text-[#475569] mb-3">예정된 기능</h3>
         <ul className="space-y-2">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center gap-2 text-sm text-[#e5e5e5]">
+            <li key={index} className="flex items-center gap-2 text-sm text-[#1e293b]">
               {/* 체크 아이콘 (회색, 미완성 느낌) */}
               <svg
-                className="w-4 h-4 text-[#333] flex-shrink-0"
+                className="w-4 h-4 text-[#475569] flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

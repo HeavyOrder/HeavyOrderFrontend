@@ -23,5 +23,14 @@ export const partsApi = {
 
   // 부품 등록 (공급사 전용)
   register: (data: PartRegisterRequest) =>
-    apiClient.post<ApiResponse<PartDetailResponse>>('/parts', data),
+    apiClient.post<ApiResponse<number>>('/parts', data),
+
+  // 부품 이미지 업로드 (공급사 전용)
+  uploadImage: (id: number, imageFile: File) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    return apiClient.post<ApiResponse<string>>(`/parts/${id}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };

@@ -32,7 +32,7 @@ const NAV_MENUS: Record<string, { label: string; href: string }[]> = {
   ],
 };
 
-// 헤더 컴포넌트: 네비게이션 바
+// 헤더 컴포넌트 (노년층 라이트 테마 - 큰 터치 타겟, 고대비)
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, isLoading, isLoggedIn, logout } = useAuth();
@@ -56,16 +56,17 @@ export default function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <header className="bg-[#0a0a0a] border-b border-[#2a2a2a]">
+    <header className="bg-white border-b border-[#e2e8f0] shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-14">
-          {/* 로고 */}
+        {/* 노년층 기준: h-16(64px)으로 더 큰 헤더 */}
+        <div className="flex justify-between items-center h-16">
+          {/* 로고 - 파란색으로 브랜드 통일 */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-[#f59e0b] rounded flex items-center justify-center">
-                <span className="text-[#0a0a0a] font-bold text-sm">H</span>
+              <div className="w-9 h-9 bg-[#1d4ed8] rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-base">H</span>
               </div>
-              <span className="text-base font-bold text-[#f5f5f5]">HeavyOrder</span>
+              <span className="text-lg font-bold text-[#0f172a]">HeavyOrder</span>
             </Link>
           </div>
 
@@ -76,10 +77,10 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-1.5 text-sm rounded transition-colors duration-150 ${
+                  className={`px-4 py-2.5 text-base rounded-lg transition-colors duration-150 ${
                     isActive(item.href)
-                      ? 'text-[#f5f5f5] bg-[#1a1a1a]'
-                      : 'text-[#a0a0a0] hover:text-[#e5e5e5] hover:bg-[#111]'
+                      ? 'text-[#1d4ed8] bg-[#eff6ff] font-semibold'
+                      : 'text-[#475569] hover:text-[#1d4ed8] hover:bg-[#f8f9fa]'
                   }`}
                 >
                   {item.label}
@@ -93,18 +94,19 @@ export default function Header() {
             {isLoading ? (
               // 로딩 중: 스켈레톤 UI
               <div className="flex items-center gap-3">
-                <div className="h-4 w-28 bg-[#1a1a1a] rounded animate-pulse"></div>
-                <div className="h-8 w-16 bg-[#1a1a1a] rounded animate-pulse"></div>
+                <div className="h-5 w-28 bg-[#e2e8f0] rounded animate-pulse"></div>
+                <div className="h-10 w-20 bg-[#e2e8f0] rounded animate-pulse"></div>
               </div>
             ) : isLoggedIn ? (
               // 로그인됨: 사용자 이름 + 로그아웃 버튼
               <>
-                <span className="text-sm text-[#a0a0a0]">
+                <span className="text-base font-medium text-[#475569]">
                   {displayName}
                 </span>
+                {/* 노년층 기준: 로그아웃은 빨간 색으로 명확하게 구분 */}
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-1.5 text-sm text-[#666] hover:text-[#e5e5e5] transition-colors duration-150"
+                  className="px-4 py-2.5 text-base rounded-lg text-[#64748b] hover:text-[#b91c1c] hover:bg-[#fef2f2] transition-colors duration-150"
                 >
                   로그아웃
                 </button>
@@ -114,13 +116,14 @@ export default function Header() {
               <>
                 <Link
                   href="/auth/login"
-                  className="px-3 py-1.5 text-sm text-[#a0a0a0] hover:text-[#e5e5e5] transition-colors duration-150"
+                  className="px-4 py-2.5 text-base font-medium text-[#475569] hover:text-[#1d4ed8] rounded-lg transition-colors duration-150"
                 >
                   로그인
                 </Link>
+                {/* 노년층 기준: 회원가입은 강한 파란 CTA 버튼 */}
                 <Link
                   href="/auth/register"
-                  className="px-3 py-1.5 text-sm bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/30 rounded hover:bg-[#f59e0b]/20 transition-colors duration-150"
+                  className="px-4 py-2.5 text-base font-semibold bg-[#1d4ed8] text-white rounded-lg hover:bg-[#1e40af] transition-colors duration-150"
                 >
                   회원가입
                 </Link>
@@ -128,14 +131,14 @@ export default function Header() {
             )}
           </div>
 
-          {/* 모바일 메뉴 버튼 */}
+          {/* 모바일 메뉴 버튼 - 노년층 기준: 더 큰 터치 타겟 (44×44px) */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-[#a0a0a0] hover:text-[#e5e5e5] transition-colors duration-150"
+              className="p-3 text-[#475569] hover:text-[#1d4ed8] hover:bg-[#f8f9fa] rounded-lg transition-colors duration-150"
             >
               <svg
-                className="w-5 h-5"
+                className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -162,17 +165,18 @@ export default function Header() {
 
         {/* 모바일 메뉴 */}
         {isMenuOpen && (
-          <div className="md:hidden py-3 border-t border-[#2a2a2a]">
+          <div className="md:hidden py-4 border-t border-[#f1f3f5] bg-white">
             <div className="flex flex-col gap-1">
               {/* 역할별 네비게이션 메뉴 (로그인 시) */}
               {isLoggedIn && navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-2 text-sm rounded transition-colors duration-150 ${
+                  // 노년층 기준: py-3.5로 48px 터치 타겟 보장
+                  className={`px-4 py-3.5 text-base rounded-lg transition-colors duration-150 ${
                     isActive(item.href)
-                      ? 'text-[#f5f5f5] bg-[#1a1a1a]'
-                      : 'text-[#a0a0a0] hover:text-[#e5e5e5] hover:bg-[#111]'
+                      ? 'text-[#1d4ed8] bg-[#eff6ff] font-semibold'
+                      : 'text-[#475569] hover:text-[#1d4ed8] hover:bg-[#f8f9fa]'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -182,24 +186,24 @@ export default function Header() {
 
               {/* 구분선 */}
               {isLoggedIn && navItems.length > 0 && (
-                <div className="border-t border-[#2a2a2a] my-2"></div>
+                <div className="border-t border-[#f1f3f5] my-2"></div>
               )}
 
               {isLoading ? (
                 // 로딩 중: 스켈레톤 UI
                 <>
-                  <div className="h-4 w-32 bg-[#1a1a1a] rounded animate-pulse my-2 mx-3"></div>
-                  <div className="h-9 w-full bg-[#1a1a1a] rounded animate-pulse"></div>
+                  <div className="h-5 w-32 bg-[#e2e8f0] rounded animate-pulse my-2 mx-4"></div>
+                  <div className="h-12 w-full bg-[#e2e8f0] rounded animate-pulse"></div>
                 </>
               ) : isLoggedIn ? (
                 // 로그인됨: 사용자 이름 + 로그아웃 버튼
                 <>
-                  <span className="text-sm text-[#a0a0a0] px-3 py-2">
+                  <span className="text-base font-medium text-[#475569] px-4 py-2">
                     {displayName}
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="text-left px-3 py-2 text-sm text-[#666] hover:text-[#e5e5e5] hover:bg-[#111] rounded transition-colors duration-150"
+                    className="text-left px-4 py-3.5 text-base text-[#64748b] hover:text-[#b91c1c] hover:bg-[#fef2f2] rounded-lg transition-colors duration-150"
                   >
                     로그아웃
                   </button>
@@ -209,14 +213,14 @@ export default function Header() {
                 <>
                   <Link
                     href="/auth/login"
-                    className="px-3 py-2 text-sm text-[#a0a0a0] hover:text-[#e5e5e5] hover:bg-[#111] rounded transition-colors duration-150"
+                    className="px-4 py-3.5 text-base font-medium text-[#475569] hover:text-[#1d4ed8] hover:bg-[#f8f9fa] rounded-lg transition-colors duration-150"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     로그인
                   </Link>
                   <Link
                     href="/auth/register"
-                    className="px-3 py-2 text-sm text-center bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/30 rounded hover:bg-[#f59e0b]/20 transition-colors duration-150"
+                    className="px-4 py-3.5 text-base font-semibold text-center bg-[#1d4ed8] text-white rounded-lg hover:bg-[#1e40af] transition-colors duration-150"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     회원가입

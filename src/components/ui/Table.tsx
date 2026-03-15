@@ -20,8 +20,7 @@ interface TableProps<T> {
   loading?: boolean;             // 로딩 상태
 }
 
-// 제네릭 데이터 테이블 컴포넌트
-// 주문/재고/부품 목록 등에 범용으로 사용
+// 제네릭 데이터 테이블 컴포넌트 (노년층 고대비 라이트 테마)
 export default function Table<T>({
   columns,
   data,
@@ -35,11 +34,11 @@ export default function Table<T>({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#1a1a1a]">
+            <tr className="bg-[#f8f9fa]">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-4 py-3 text-left text-xs font-medium text-[#a0a0a0] uppercase tracking-wider ${col.className || ''}`}
+                  className={`px-5 py-4 text-left text-sm font-bold text-[#475569] uppercase tracking-wide ${col.className || ''}`}
                 >
                   {col.header}
                 </th>
@@ -60,11 +59,11 @@ export default function Table<T>({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#1a1a1a]">
+            <tr className="bg-[#f8f9fa]">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-4 py-3 text-left text-xs font-medium text-[#a0a0a0] uppercase tracking-wider ${col.className || ''}`}
+                  className={`px-5 py-4 text-left text-sm font-bold text-[#475569] uppercase tracking-wide ${col.className || ''}`}
                 >
                   {col.header}
                 </th>
@@ -72,7 +71,8 @@ export default function Table<T>({
             </tr>
           </thead>
         </table>
-        <div className="py-12 text-center text-[#666] text-sm">
+        {/* 노년층 기준: 큰 빈 상태 메시지 */}
+        <div className="py-12 text-center text-[#475569] text-base">
           {emptyMessage}
         </div>
       </div>
@@ -84,11 +84,11 @@ export default function Table<T>({
       <table className="w-full">
         {/* 테이블 헤더 */}
         <thead>
-          <tr className="bg-[#1a1a1a]">
+          <tr className="bg-[#f8f9fa]">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-xs font-medium text-[#a0a0a0] uppercase tracking-wider ${col.className || ''}`}
+                className={`px-5 py-4 text-left text-sm font-bold text-[#475569] uppercase tracking-wide ${col.className || ''}`}
               >
                 {col.header}
               </th>
@@ -96,13 +96,14 @@ export default function Table<T>({
           </tr>
         </thead>
 
-        {/* 테이블 본문 */}
+        {/* 테이블 본문 - zebra stripe로 행 구분 용이 */}
         <tbody>
           {data.map((item, index) => (
             <tr
               key={index}
               className={`
-                border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition-colors duration-100
+                border-b border-[#f1f3f5] hover:bg-[#eff6ff] transition-colors duration-100
+                ${index % 2 === 1 ? 'bg-[#f8f9fa]' : 'bg-white'}
                 ${onRowClick ? 'cursor-pointer' : ''}
               `}
               onClick={() => onRowClick?.(item)}
@@ -110,9 +111,8 @@ export default function Table<T>({
               {columns.map((col) => (
                 <td
                   key={col.key}
-                  className={`px-4 py-3 text-sm text-[#e5e5e5] ${col.className || ''}`}
+                  className={`px-5 py-4 text-base text-[#1e293b] ${col.className || ''}`}
                 >
-                  {/* render 함수가 있으면 사용, 없으면 key로 값 접근 */}
                   {col.render
                     ? col.render(item)
                     : String((item as Record<string, unknown>)[col.key] ?? '')}

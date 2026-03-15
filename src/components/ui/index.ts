@@ -14,3 +14,4 @@ export { default as EmptyState } from './EmptyState';
 export { default as Skeleton } from './Skeleton';
 export { default as ComingSoon } from './ComingSoon';
 export { default as Select } from './Select';
+export { default as ImageCropper } from './ImageCropper';
