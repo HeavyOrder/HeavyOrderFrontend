@@ -13,9 +13,11 @@ export const reservationApi = {
   create: (data: ReservationRequest) =>
     apiClient.post<ApiResponse<number>>('/reservation', data),
 
-  // 공업사 예약 목록 조회
-  getRepairShopReservations: () =>
-    apiClient.get<ApiResponse<ReservationShopResponse[]>>('/reservation/repair-shop'),
+  // 공업사 예약 목록 조회 (date: YYYY-MM-DD 형식, 선택)
+  getRepairShopReservations: (date?: string) =>
+    apiClient.get<ApiResponse<ReservationShopResponse[]>>('/reservation/repair-shop', {
+      params: date ? { date } : undefined,
+    }),
 
   // 공업사 예약 상세 조회
   getRepairShopReservation: (id: number) =>

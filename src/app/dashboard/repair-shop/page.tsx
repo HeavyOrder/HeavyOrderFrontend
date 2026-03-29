@@ -3,28 +3,59 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRoleGuard } from '@/lib/hooks';
-import { ordersApi, inventoryApi } from '@/lib/api';
+import { ordersApi, inventoryApi, reservationApi } from '@/lib/api';
 import { Skeleton } from '@/components/ui';
 import { OrderStatusBadge } from '@/components/ui/Badge';
-import { MyOrderListItem, InventoryResponse } from '@/types';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { MyOrderListItem, InventoryResponse, ReservationShopResponse, ReservationStatus } from '@/types';
+import { formatCurrency, formatDate, formatDateTime } from '@/lib/utils';
+
+// 오늘 날짜 YYYY-MM-DD
+const today = new Date().toISOString().split('T')[0];
+
+// 오늘 날짜를 한국어로 (예: 3월 19일)
+function todayLabel(): string {
+  const d = new Date();
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
+
+// 예약 상태별 뱃지 색상
+const RESERVATION_STATUS_COLORS: Record<ReservationStatus, string> = {
+  PENDING: 'bg-[#fef3c7] text-[#b45309] border-[#f59e0b]/20',
+  APPROVED: 'bg-[#dcfce7] text-[#15803d] border-[#bbf7d0]',
+  COMPLETED: 'bg-[#dbeafe] text-[#1d4ed8] border-[#bfdbfe]',
+  CANCELED: 'bg-[#fef2f2] text-[#b91c1c] border-[#fecaca]',
+};
+
+const RESERVATION_STATUS_LABEL: Record<ReservationStatus, string> = {
+  PENDING: '대기중',
+  APPROVED: '승인됨',
+  COMPLETED: '완료됨',
+  CANCELED: '취소됨',
+};
 
 export default function RepairShopDashboard() {
   const { isAuthorized, isLoading: authLoading, user } = useRoleGuard(['REPAIR_SHOP']);
   const [orders, setOrders] = useState<MyOrderListItem[]>([]);
   const [inventory, setInventory] = useState<InventoryResponse[]>([]);
+  const [todayReservations, setTodayReservations] = useState<ReservationShopResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAuthorized) return;
     const load = async () => {
       try {
-        const [ordersRes, invRes] = await Promise.all([
+        const [ordersRes, invRes, reservRes] = await Promise.all([
           ordersApi.getMyOrders(),
           inventoryApi.getMyInventories({}),
+          reservationApi.getRepairShopReservations(today),
         ]);
         setOrders(ordersRes.data.data || []);
         setInventory(invRes.data.data || []);
+        // 오늘 예약을 시간순 정렬
+        const reservations = (reservRes.data.data || []).sort(
+          (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+        );
+        setTodayReservations(reservations);
       } catch { /* API 에러 무시 */ }
       setLoading(false);
     };
@@ -147,6 +178,42 @@ export default function RepairShopDashboard() {
             </svg>
             <span className="text-sm font-semibold text-[#1e293b] text-center">고객<br/>관리</span>
           </Link>
+        </div>
+
+        {/* 오늘 예약 */}
+        <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-6 py-5 border-b border-[#f1f3f5] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <h2 className="text-lg font-bold text-[#0f172a]">오늘 예약</h2>
+              <span className="text-sm text-[#475569]">{todayLabel()}</span>
+            </div>
+            <Link href="/repair-shop/schedule" className="text-base font-semibold text-[#1d4ed8] hover:text-[#1e40af]">
+              전체 보기 →
+            </Link>
+          </div>
+          <div className="divide-y divide-[#f1f3f5]">
+            {loading ? (
+              <div className="p-6"><Skeleton variant="text" count={2} /></div>
+            ) : todayReservations.length === 0 ? (
+              <div className="p-6 text-center text-base text-[#94a3b8]">오늘 예약이 없습니다</div>
+            ) : (
+              todayReservations.slice(0, 5).map(r => (
+                <div key={r.id} className="px-6 py-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-base font-medium text-[#1e293b]">{r.driverEmail}</p>
+                    <p className="text-sm text-[#475569] mt-0.5 font-mono">{r.driverPhoneNumber}</p>
+                    <p className="text-sm text-[#475569] mt-0.5">{formatDateTime(r.time)}</p>
+                  </div>
+                  <span className={`px-2.5 py-1 text-sm font-medium border rounded-lg ${RESERVATION_STATUS_COLORS[r.status]}`}>
+                    {RESERVATION_STATUS_LABEL[r.status]}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
         {/* 최근 주문 */}

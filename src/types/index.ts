@@ -60,13 +60,18 @@ export interface MemberSignUpRequest {
 }
 
 // 장비기사 회원가입 DTO
-export interface MachineDriverSignUpRequest extends MemberSignUpRequest {}
+export interface MachineDriverSignUpRequest extends MemberSignUpRequest {
+  latitude?: number;  // 위도 (선택)
+  longitude?: number; // 경도 (선택)
+}
 
 // 수리점 회원가입 DTO
 export interface RepairShopSignUpRequest extends MemberSignUpRequest {
   businessName: string;
   businessNumber: string;
   address: string;
+  latitude: number;  // 위도 (필수)
+  longitude: number; // 경도 (필수)
 }
 
 // 공급사 회원가입 DTO
@@ -252,12 +257,50 @@ export interface CustomerResponse {
   id: number;
   name: string;
   phoneNumber: string;
+  driverId?: number; // 연동된 드라이버 계정 ID (수동 등록 고객은 null)
 }
 
 // 고객 수정 요청 DTO
 export interface CustomerUpdateRequest {
   name?: string;
   phoneNumber?: string;
+}
+
+// ============================================
+// 드라이버 관련 타입 (장비기사 전용)
+// ============================================
+
+// 근처 공업사 목록 아이템
+export interface RepairShopListItem {
+  id: number;
+  businessName: string; // 공업사명
+  address: string;
+  phoneNumber: string;
+  distanceKm: number; // 현재 위치로부터 거리 (km)
+}
+
+// 공업사 상세 정보
+export interface RepairShopDetail {
+  id: number;
+  businessName: string;
+  businessNumber: string;
+  address: string;
+  phoneNumber: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+// 예약 가능 시간대
+export interface AvailableSlot {
+  slotTime: string; // ISO 8601 형식 (예: "2026-03-19T09:00:00")
+  available: boolean; // 예약 가능 여부
+}
+
+// 근처 공업사 검색 파라미터
+export interface RepairShopSearchParams {
+  lat: number;
+  lng: number;
+  radius?: number; // 검색 반경 km (기본값: 10)
 }
 
 // ============================================
@@ -279,6 +322,7 @@ export const ReservationStatusLabel: Record<ReservationStatus, string> = {
 export interface ReservationRequest {
   repairShopId: number;
   time: string;
+  memo?: string; // 메모 (선택)
 }
 
 // 공업사 예약 응답 DTO

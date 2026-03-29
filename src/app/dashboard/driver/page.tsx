@@ -34,7 +34,7 @@ export default function DriverDashboard() {
 
         {/* 메인 CTA - 예약 */}
         <Link
-          href="/driver/reservation"
+          href="/driver/repair-shops"
           className="block bg-[#1d4ed8] rounded-2xl shadow-sm px-6 py-6 hover:bg-[#1e40af] transition-colors"
         >
           <div className="flex items-center gap-4">

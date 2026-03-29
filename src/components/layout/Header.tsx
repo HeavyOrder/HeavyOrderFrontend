@@ -21,7 +21,8 @@ const NAV_MENUS: Record<string, { label: string; href: string }[]> = {
   ],
   DRIVER: [
     { label: '대시보드', href: '/dashboard/driver' },
-    { label: '예약', href: '/driver/reservation' },
+    { label: '공업사 찾기', href: '/driver/repair-shops' },
+    { label: '내 예약', href: '/driver/reservation' },
   ],
   ADMIN: [
     { label: '대시보드', href: '/dashboard/repair-shop' },
