@@ -67,8 +67,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 하단 저작권 */}
-        <div className="border-t border-[#e2e8f0] mt-8 pt-6 text-center">
+        {/* 하단 저작권 및 법적 링크 */}
+        <div className="border-t border-[#e2e8f0] mt-8 pt-6 text-center space-y-2">
+          <div className="flex justify-center gap-4">
+            <Link href="/privacy-policy" className="text-sm text-[#475569] hover:text-[#1d4ed8] transition-colors duration-150">
+              개인정보처리방침
+            </Link>
+          </div>
           <p className="text-sm text-[#64748b]">&copy; 2024 HeavyOrder. All rights reserved.</p>
         </div>
       </div>
