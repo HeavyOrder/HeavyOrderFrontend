@@ -71,13 +71,10 @@ function RegisterForm() {
     setError('');
   };
 
-  // 카카오 Geocoding API로 주소 → 좌표 변환
+  // 카카오 Geocoding API로 주소 → 좌표 변환 (서버 API Route 경유)
   const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
     try {
-      const res = await fetch(
-        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(address)}`,
-        { headers: { Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}` } }
-      );
+      const res = await fetch(`/api/geocode?query=${encodeURIComponent(address)}`);
       const json = await res.json();
       const doc = json.documents?.[0];
       if (!doc) return null;
