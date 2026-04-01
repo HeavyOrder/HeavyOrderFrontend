@@ -29,6 +29,9 @@ export const authApi = {
 
   // 로그아웃
   logout: () => apiClient.post('/auth/logout'),
+
+  // 회원 탈퇴 (Soft Delete - 개인정보 익명화, 푸시 토큰 삭제)
+  deleteAccount: () => apiClient.delete<ApiResponse<null>>('/auth/account'),
 };
 
 // 사용자 정보 관련 API

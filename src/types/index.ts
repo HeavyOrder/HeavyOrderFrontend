@@ -33,7 +33,6 @@ export interface Member {
   role: RoleType;
   phoneNumber: string;
   businessName?: string;
-  businessNumber?: string;
   address?: string;
 }
 
@@ -68,7 +67,6 @@ export interface MachineDriverSignUpRequest extends MemberSignUpRequest {
 // 수리점 회원가입 DTO
 export interface RepairShopSignUpRequest extends MemberSignUpRequest {
   businessName: string;
-  businessNumber: string;
   address: string;
   latitude: number;  // 위도 (필수)
   longitude: number; // 경도 (필수)
@@ -77,7 +75,6 @@ export interface RepairShopSignUpRequest extends MemberSignUpRequest {
 // 공급사 회원가입 DTO
 export interface SupplierCompanySignUpRequest extends MemberSignUpRequest {
   businessName: string;
-  businessNumber: string;
   address: string;
 }
 
@@ -283,7 +280,6 @@ export interface RepairShopListItem {
 export interface RepairShopDetail {
   id: number;
   businessName: string;
-  businessNumber: string;
   address: string;
   phoneNumber: string;
   latitude: number | null;

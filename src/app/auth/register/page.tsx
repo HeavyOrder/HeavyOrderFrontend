@@ -37,7 +37,6 @@ function RegisterForm() {
     phoneNumber: '',
     role: defaultRole.toUpperCase(),
     businessName: '',
-    businessNumber: '',
     address: '',
     latitude: 0,
     longitude: 0,
@@ -123,7 +122,7 @@ function RegisterForm() {
     }
 
     if (needsBusinessInfo) {
-      if (!formData.businessName || !formData.businessNumber || !formData.address) {
+      if (!formData.businessName || !formData.address) {
         setError('사업자 정보를 모두 입력해주세요.');
         setLoading(false);
         return;
@@ -157,7 +156,6 @@ function RegisterForm() {
         await authApi.signUpRepairShop({
           ...baseData,
           businessName: formData.businessName,
-          businessNumber: formData.businessNumber,
           address: formData.address,
           latitude: formData.latitude,
           longitude: formData.longitude,
@@ -166,7 +164,6 @@ function RegisterForm() {
         await authApi.signUpSupplierCompany({
           ...baseData,
           businessName: formData.businessName,
-          businessNumber: formData.businessNumber,
           address: formData.address,
         });
       }
@@ -235,16 +232,6 @@ function RegisterForm() {
               name="businessName"
               placeholder="상호명을 입력하세요"
               value={formData.businessName}
-              onChange={handleChange}
-              required
-            />
-
-            <Input
-              label="사업자등록번호"
-              type="text"
-              name="businessNumber"
-              placeholder="000-00-00000"
-              value={formData.businessNumber}
               onChange={handleChange}
               required
             />

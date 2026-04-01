@@ -103,7 +103,6 @@ POST /auth/sign-up/repair-shop
   role: string;           // 역할 (필수)
   phoneNumber: string;    // 전화번호 (필수)
   businessName: string;   // 사업자명 (필수)
-  businessNumber: string; // 사업자번호 (필수)
   address: string;        // 주소 (필수)
   latitude: number;       // 위도 (필수)
   longitude: number;      // 경도 (필수)
@@ -131,7 +130,6 @@ POST /auth/sign-up/supplier-company
   role: string;           // 역할 (필수)
   phoneNumber: string;    // 전화번호 (필수)
   businessName: string;   // 사업자명 (필수)
-  businessNumber: string; // 사업자번호 (필수)
   address: string;        // 주소 (필수)
 }
 ```
@@ -175,6 +173,25 @@ POST /auth/logout
 **Request:** 없음 (세션 쿠키 필요)
 
 **Response:** 없음
+
+---
+
+### 회원 탈퇴
+
+```
+DELETE /auth/account
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request:** 없음
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+**Note:** Soft Delete 방식으로 처리됩니다. 개인정보는 익명화되며, 관련 푸시 토큰이 모두 삭제됩니다.
 
 ---
 
@@ -747,7 +764,6 @@ GET /driver/repair-shops/{shopId}
 ApiResponse<{
   id: number;
   businessName: string;
-  businessNumber: string;
   address: string;
   phoneNumber: string;
   latitude: number | null;
@@ -1248,7 +1264,6 @@ interface RepairShopListItem {
 interface RepairShopDetail {
   id: number;
   businessName: string;
-  businessNumber: string;
   address: string;
   phoneNumber: string;
   latitude: number | null;
@@ -1332,7 +1347,6 @@ interface MachineDriverSignUp {
 
 interface RepairShopSignUp extends MachineDriverSignUp {
   businessName: string;
-  businessNumber: string;
   address: string;
   latitude: number;
   longitude: number;
@@ -1340,7 +1354,6 @@ interface RepairShopSignUp extends MachineDriverSignUp {
 
 interface SupplierCompanySignUp extends MachineDriverSignUp {
   businessName: string;
-  businessNumber: string;
   address: string;
 }
 ```
@@ -1357,6 +1370,7 @@ interface SupplierCompanySignUp extends MachineDriverSignUp {
 | POST | `/auth/sign-up/supplier-company` | 공급사 회원가입 | X |
 | POST | `/auth/login` | 로그인 | X |
 | POST | `/auth/logout` | 로그아웃 | O |
+| DELETE | `/auth/account` | 회원 탈퇴 | O |
 | GET | `/user/me` | 내 정보 조회 | O |
 | GET | `/parts` | 부품 목록 조회 | X |
 | GET | `/parts/search` | 부품 검색 | X |

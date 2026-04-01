@@ -104,7 +104,16 @@ export default function Header() {
                 <span className="text-base font-medium text-[#475569]">
                   {displayName}
                 </span>
-                {/* 노년층 기준: 로그아웃은 빨간 색으로 명확하게 구분 */}
+                <Link
+                  href="/settings"
+                  className={`px-4 py-2.5 text-base rounded-lg transition-colors duration-150 ${
+                    isActive('/settings')
+                      ? 'text-[#1d4ed8] bg-[#eff6ff] font-semibold'
+                      : 'text-[#64748b] hover:text-[#1d4ed8] hover:bg-[#f8f9fa]'
+                  }`}
+                >
+                  설정
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2.5 text-base rounded-lg text-[#64748b] hover:text-[#b91c1c] hover:bg-[#fef2f2] transition-colors duration-150"
@@ -202,6 +211,17 @@ export default function Header() {
                   <span className="text-base font-medium text-[#475569] px-4 py-2">
                     {displayName}
                   </span>
+                  <Link
+                    href="/settings"
+                    className={`px-4 py-3.5 text-base rounded-lg transition-colors duration-150 ${
+                      isActive('/settings')
+                        ? 'text-[#1d4ed8] bg-[#eff6ff] font-semibold'
+                        : 'text-[#475569] hover:text-[#1d4ed8] hover:bg-[#f8f9fa]'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    설정
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="text-left px-4 py-3.5 text-base text-[#64748b] hover:text-[#b91c1c] hover:bg-[#fef2f2] rounded-lg transition-colors duration-150"

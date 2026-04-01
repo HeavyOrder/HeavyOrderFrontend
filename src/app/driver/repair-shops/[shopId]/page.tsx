@@ -118,7 +118,6 @@ export default function RepairShopDetailPage() {
           <div className="mt-3 space-y-1.5 text-sm text-[#475569]">
             <p>{shop.address}</p>
             <p className="font-mono">{shop.phoneNumber}</p>
-            <p className="text-xs text-[#94a3b8]">사업자번호: {shop.businessNumber}</p>
           </div>
         </div>
       ) : (
