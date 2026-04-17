@@ -77,7 +77,11 @@ function RegisterForm() {
       const json = await res.json();
       const doc = json.documents?.[0];
       if (!doc) return null;
-      return { lat: parseFloat(doc.y), lng: parseFloat(doc.x) };
+      // 주소 검색은 y/x, 키워드 검색도 y/x 필드 사용
+      const lat = parseFloat(doc.y);
+      const lng = parseFloat(doc.x);
+      if (isNaN(lat) || isNaN(lng)) return null;
+      return { lat, lng };
     } catch {
       return null;
     }
@@ -91,18 +95,24 @@ function RegisterForm() {
     }
     new window.daum.Postcode({
       oncomplete: async (data) => {
-        const selectedAddress = data.roadAddress || data.address;
-        // 카카오 Geocoding으로 좌표 조회
-        const coords = await geocodeAddress(selectedAddress);
+        const roadAddress = data.roadAddress;
+        const jibunAddress = data.address;
+        const displayAddress = roadAddress || jibunAddress;
+
+        // 도로명 → 지번 순으로 좌표 조회 재시도
+        let coords = roadAddress ? await geocodeAddress(roadAddress) : null;
+        if (!coords && jibunAddress) {
+          coords = await geocodeAddress(jibunAddress);
+        }
         if (!coords) {
           setError('주소의 좌표를 가져올 수 없습니다. 다른 주소를 검색해주세요.');
           return;
         }
         setFormData(prev => ({
           ...prev,
-          address: selectedAddress,
-          latitude: coords.lat,
-          longitude: coords.lng,
+          address: displayAddress,
+          latitude: coords!.lat,
+          longitude: coords!.lng,
         }));
         setError('');
       },
