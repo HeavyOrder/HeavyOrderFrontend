@@ -87,23 +87,26 @@ export default function DriverDashboard() {
           </div>
         </div>
 
-        {/* 준비 중 기능 */}
-        <div className="bg-white border border-[#e2e8f0] rounded-2xl shadow-sm px-6 py-5 opacity-60">
+        {/* 작업일지 */}
+        <Link
+          href="/driver/worklog"
+          className="block bg-white border border-[#e2e8f0] rounded-2xl shadow-sm px-6 py-5 hover:border-[#bfdbfe] hover:shadow-md transition-all"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#f1f3f5] rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg className="w-7 h-7 text-[#94a3b8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-[#eff6ff] rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-7 h-7 text-[#1d4ed8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-base font-semibold text-[#475569]">수리 이력</p>
-              <p className="text-sm text-[#94a3b8] mt-0.5">곧 출시 예정입니다</p>
+              <p className="text-base font-semibold text-[#1e293b]">작업일지</p>
+              <p className="text-sm text-[#475569] mt-0.5">일일 작업 기록 및 사진 관리</p>
             </div>
-            <span className="ml-auto bg-[#f1f3f5] text-[#64748b] px-3 py-1 rounded-full text-sm font-medium">
-              준비 중
-            </span>
+            <svg className="w-5 h-5 text-[#94a3b8] ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </div>
-        </div>
+        </Link>
 
       </div>
     </div>

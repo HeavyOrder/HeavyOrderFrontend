@@ -345,3 +345,70 @@ export interface ReservationDriverResponse {
 export interface ChangeReservationStatusRequest {
   status: ReservationStatus;
 }
+
+// ============================================
+// 작업일지 관련 타입
+// ============================================
+
+// 작업일지 사진 타입
+export type WorkLogPhotoType = 'WORK' | 'RENTAL_START' | 'RENTAL_END' | 'MAINTENANCE';
+
+// 작업일지 사진 타입 한글 매핑
+export const WorkLogPhotoTypeLabel: Record<WorkLogPhotoType, string> = {
+  WORK: '작업 사진',
+  RENTAL_START: '임대 시작',
+  RENTAL_END: '임대 종료',
+  MAINTENANCE: '정비',
+};
+
+// 작업일지 등록/수정 요청 DTO
+export interface WorkLogRequest {
+  location: string;
+  dateTime: string; // ISO LocalDateTime (예: "2026-05-18T09:00:00")
+  description?: string;
+  workingHour: number; // 소수 1자리 (시간계 단위)
+}
+
+// 작업일지 사진 응답 DTO
+export interface WorkLogPhotoResponse {
+  id: number;
+  url: string;
+  type: WorkLogPhotoType;
+  takenAt: string | null;
+  createdAt: string;
+}
+
+// 작업일지 응답 DTO
+export interface WorkLogResponse {
+  id: number;
+  writerEmail: string;
+  location: string;
+  dateTime: string;
+  description: string | null;
+  workingHour: number;
+  createdAt: string;
+  updatedAt: string;
+  photos: WorkLogPhotoResponse[];
+}
+
+// Spring Data 페이징 응답 구조
+export interface Page<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  number: number;
+  size: number;
+  numberOfElements: number;
+  sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+  empty: boolean;
+}

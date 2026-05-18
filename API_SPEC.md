@@ -60,6 +60,15 @@ interface ApiResponse<T> {
 | `ANDROID` | 안드로이드 |
 | `WEB` | 웹 |
 
+### WorkLogPhotoType (작업일지 사진 타입)
+
+| 값 | 설명 |
+|---|---|
+| `WORK` | 작업 사진 |
+| `RENTAL_START` | 임대 시작 시점 |
+| `RENTAL_END` | 임대 종료 시점 |
+| `MAINTENANCE` | 정비 전/후 |
+
 ---
 
 ## 인증 API (`/auth`)
@@ -1063,6 +1072,187 @@ ApiResponse<null>
 
 ---
 
+## 작업일지 API (`/worklog`)
+
+장비기사가 일일 작업기록(현장·내용·가동시간·사진)을 남기고 월말 정산·임대 분쟁 증빙에 활용합니다. 모든 엔드포인트는 본인 작업일지만 접근 가능합니다.
+
+### 작업일지 등록
+
+```
+POST /worklog
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  location: string;          // 현장명 (필수, 공백 불가, 최대 200자)
+  dateTime: string;          // 작업 일시 (필수, ISO LocalDateTime)
+  description?: string;      // 작업 내용 (선택, 최대 1000자)
+  workingHour: number;       // 가동시간 (필수, 0.0 이상, 소수 1자리, 시간계 단위)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<number>  // 생성된 작업일지 ID
+```
+
+---
+
+### 내 작업일지 목록 조회
+
+```
+GET /worklog
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `from` | string (YYYY-MM-DD) | 조회 시작일 (선택, 기본: 금월 1일) |
+| `to` | string (YYYY-MM-DD) | 조회 종료일 (선택, 기본: 오늘) |
+| `page` | number | 페이지 번호 (선택, 0부터, 기본 0) |
+| `size` | number | 페이지 크기 (선택, 기본 20) |
+| `sort` | string | 정렬 (선택, 기본 `dateTime,desc`) |
+
+**Response:**
+```typescript
+ApiResponse<Page<WorkLogResponse>>
+```
+
+`Page<T>`는 Spring Data 표준 페이징 응답 구조입니다 (TypeScript 타입 정의 참고).
+
+---
+
+### 작업일지 단건 조회
+
+```
+GET /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Response:**
+```typescript
+ApiResponse<WorkLogResponse>
+```
+
+본인 작업일지가 아니면 401, 없으면 404.
+
+---
+
+### 작업일지 수정
+
+```
+PATCH /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Request Body:** 등록과 동일 (전체 덮어쓰기)
+```typescript
+{
+  location: string;
+  dateTime: string;
+  description?: string;
+  workingHour: number;
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<WorkLogResponse>  // 수정 후 결과
+```
+
+---
+
+### 작업일지 삭제
+
+```
+DELETE /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+**Note:** 첨부된 사진 row도 함께 삭제됩니다 (Cloudinary 원본 파일은 남음).
+
+---
+
+### 작업일지 사진 업로드
+
+```
+POST /worklog/{id}/photos
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Content-Type:** `multipart/form-data`
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `type` | WorkLogPhotoType | 사진 타입 (필수, `WORK` / `RENTAL_START` / `RENTAL_END` / `MAINTENANCE`). 한 요청의 모든 파일에 동일 적용. |
+
+**Form Data:**
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `files` | File[] | 이미지 파일 (jpg, jpeg, png, webp). 한 요청당 최대 10장. |
+
+**Response:**
+```typescript
+ApiResponse<WorkLogPhotoResponse[]>  // 새로 추가된 사진 목록
+```
+
+---
+
+### 작업일지 사진 삭제
+
+```
+DELETE /worklog/photos/{photoId}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `photoId` | number | 사진 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지의 사진)
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+---
+
 ## 홈 API
 
 ### 홈 (로그인 상태 확인)
@@ -1356,6 +1546,58 @@ interface SupplierCompanySignUp extends MachineDriverSignUp {
   businessName: string;
   address: string;
 }
+
+// WorkLog
+type WorkLogPhotoType = 'WORK' | 'RENTAL_START' | 'RENTAL_END' | 'MAINTENANCE';
+
+interface WorkLogRequest {
+  location: string;
+  dateTime: string;        // ISO LocalDateTime
+  description?: string;
+  workingHour: number;     // 소수 1자리 (시간계 단위)
+}
+
+interface WorkLogPhotoResponse {
+  id: number;
+  url: string;
+  type: WorkLogPhotoType;
+  takenAt: string | null;  // ISO LocalDateTime
+  createdAt: string;       // ISO LocalDateTime
+}
+
+interface WorkLogResponse {
+  id: number;
+  writerEmail: string;
+  location: string;
+  dateTime: string;
+  description: string | null;
+  workingHour: number;
+  createdAt: string;
+  updatedAt: string;
+  photos: WorkLogPhotoResponse[];
+}
+
+// Spring Data Page<T> 응답 구조 (페이징 엔드포인트 공통)
+interface Page<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  number: number;
+  size: number;
+  numberOfElements: number;
+  sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+  empty: boolean;
+}
 ```
 
 ---
@@ -1403,3 +1645,10 @@ interface SupplierCompanySignUp extends MachineDriverSignUp {
 | PATCH | `/reservation/driver/{id}` | 장비기사 예약 상태 변경 | O (장비기사) |
 | POST | `/push/token` | 푸시 토큰 등록 | O |
 | DELETE | `/push/token` | 푸시 토큰 삭제 | O |
+| POST | `/worklog` | 작업일지 등록 | O |
+| GET | `/worklog` | 내 작업일지 목록 조회 (기간·페이징) | O |
+| GET | `/worklog/{id}` | 작업일지 단건 조회 | O (본인) |
+| PATCH | `/worklog/{id}` | 작업일지 수정 | O (본인) |
+| DELETE | `/worklog/{id}` | 작업일지 삭제 | O (본인) |
+| POST | `/worklog/{id}/photos` | 작업일지 사진 업로드 | O (본인) |
+| DELETE | `/worklog/photos/{photoId}` | 작업일지 사진 삭제 | O (본인) |

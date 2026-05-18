@@ -10,6 +10,7 @@ export { inventoryApi } from './inventory';
 export { customerApi } from './customer';
 export { reservationApi } from './reservation';
 export { driverApi } from './driver';
+export { worklogApi } from './worklog';
 
 // 타입 re-export (편의상)
 export type { AxiosError } from 'axios';

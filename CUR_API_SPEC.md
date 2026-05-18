@@ -1,71 +1,18 @@
-# 현재 프론트엔드에 반영된 API 명세 (스냅샷)
+# HeavyOrder API 명세서
 
-> 이 파일은 프론트엔드에 마지막으로 반영된 API_SPEC.md의 스냅샷입니다.
-> 백엔드가 API_SPEC.md를 업데이트하면, 이 파일과 비교하여 변경사항만 확인합니다.
-> 반영 완료 후 이 파일을 API_SPEC.md와 동일하게 업데이트합니다.
->
-> **마지막 동기화**: 2026-04-01
+> 이 문서는 HeavyOrder 백엔드 API의 상세 명세입니다.
 
----
+## 기본 정보
 
-## API 엔드포인트 요약표
-
-| 메서드 | 경로 | 설명 | 인증 | 프론트엔드 파일 |
-|--------|------|------|------|----------------|
-| GET | `/` | 홈 (로그인 상태 확인) | 선택 | `src/lib/api/auth.ts` |
-| POST | `/auth/sign-up/machine-driver` | 기계운전자 회원가입 | X | `src/lib/api/auth.ts` |
-| POST | `/auth/sign-up/repair-shop` | 수리점 회원가입 | X | `src/lib/api/auth.ts` |
-| POST | `/auth/sign-up/supplier-company` | 공급사 회원가입 | X | `src/lib/api/auth.ts` |
-| POST | `/auth/login` | 로그인 | X | `src/lib/api/auth.ts` |
-| POST | `/auth/logout` | 로그아웃 | O | `src/lib/api/auth.ts` |
-| DELETE | `/auth/account` | 회원 탈퇴 | O | `src/lib/api/auth.ts` |
-| GET | `/user/me` | 내 정보 조회 | O | `src/lib/api/auth.ts` |
-| GET | `/parts` | 부품 목록 조회 | X | `src/lib/api/parts.ts` |
-| GET | `/parts/search` | 부품 검색 | X | `src/lib/api/parts.ts` |
-| GET | `/parts/{id}` | 부품 상세 조회 | X | `src/lib/api/parts.ts` |
-| POST | `/parts` | 부품 등록 | O | `src/lib/api/parts.ts` |
-| POST | `/parts/{id}/image` | 부품 이미지 업로드 | O | `src/lib/api/parts.ts` |
-| GET | `/inventory` | 내 재고 조회 | O | `src/lib/api/inventory.ts` |
-| PATCH | `/inventory/{id}/consume` | 재고 차감 | O | `src/lib/api/inventory.ts` |
-| PATCH | `/inventory/{id}/restock` | 재고 입고 | O | `src/lib/api/inventory.ts` |
-| POST | `/inventory` | 재고 생성 | O | `src/lib/api/inventory.ts` |
-| POST | `/orders` | 주문 생성 | O | `src/lib/api/orders.ts` |
-| GET | `/orders` | 내 주문 목록 조회 | O | `src/lib/api/orders.ts` |
-| PATCH | `/orders/{id}` | 주문 취소 | O | `src/lib/api/orders.ts` |
-| GET | `/supplier/orders` | 공급사 주문 목록 조회 | O (공급사) | `src/lib/api/supplier.ts` |
-| PATCH | `/supplier/orders` | 주문 상태 변경 | O (공급사) | `src/lib/api/supplier.ts` |
-| POST | `/customer` | 고객 등록 | O | `src/lib/api/customer.ts` |
-| GET | `/customer` | 내 고객 목록 조회 | O | `src/lib/api/customer.ts` |
-| GET | `/customer/{id}` | 고객 상세 조회 | O | `src/lib/api/customer.ts` |
-| PUT | `/customer/{id}` | 고객 정보 수정 | O | `src/lib/api/customer.ts` |
-| GET | `/driver/repair-shops` | 근처 공업사 목록 조회 | O (장비기사) | `src/lib/api/driver.ts` |
-| GET | `/driver/repair-shops/{shopId}` | 공업사 상세 조회 | O (장비기사) | `src/lib/api/driver.ts` |
-| GET | `/driver/repair-shops/{shopId}/slots` | 예약 가능 시간대 조회 | O (장비기사) | `src/lib/api/driver.ts` |
-| POST | `/reservation` | 예약 등록 | O (장비기사) | `src/lib/api/reservation.ts` |
-| GET | `/reservation/repair-shop` | 공업사 예약 목록 조회 | O (공업사) | `src/lib/api/reservation.ts` |
-| GET | `/reservation/repair-shop/{id}` | 공업사 예약 상세 조회 | O (공업사) | `src/lib/api/reservation.ts` |
-| GET | `/reservation/repair-shop/customers/{driverId}` | 특정 고객 예약 목록 조회 | O (공업사) | `src/lib/api/reservation.ts` |
-| PATCH | `/reservation/repair-shop/{id}` | 공업사 예약 상태 변경 | O (공업사) | `src/lib/api/reservation.ts` |
-| GET | `/reservation/driver` | 장비기사 예약 목록 조회 | O (장비기사) | `src/lib/api/reservation.ts` |
-| GET | `/reservation/driver/{id}` | 장비기사 예약 상세 조회 | O (장비기사) | `src/lib/api/reservation.ts` |
-| PATCH | `/reservation/driver/{id}` | 장비기사 예약 상태 변경 | O (장비기사) | `src/lib/api/reservation.ts` |
-| POST | `/push/token` | 푸시 토큰 등록 | O | `src/lib/api/push.ts` |
-| DELETE | `/push/token` | 푸시 토큰 삭제 | O | `src/lib/api/push.ts` |
-
----
-
-## Enum 타입
-
-```typescript
-type RoleType = 'REPAIR_SHOP' | 'SUPPLIER' | 'DRIVER' | 'ADMIN';
-type OrderStatus = 'PENDING' | 'APPROVED' | 'SHIPPED' | 'CANCELED';
-type ReservationStatus = 'PENDING' | 'APPROVED' | 'COMPLETED' | 'CANCELED';
-type PushPlatform = 'ANDROID' | 'WEB';
-```
+- **Base URL**: `http://localhost:8080`
+- **인증 방식**: 세션 기반 (JSESSIONID 쿠키)
+- **Content-Type**: `application/json`
 
 ---
 
 ## 공통 응답 형식
+
+모든 API는 다음 형식으로 응답합니다:
 
 ```typescript
 interface ApiResponse<T> {
@@ -77,276 +24,1631 @@ interface ApiResponse<T> {
 
 ---
 
-## 상세 명세
+## Enum 타입
 
-아래는 각 엔드포인트의 Request/Response 상세입니다.
+### RoleType (사용자 역할)
 
-### 인증 API (`/auth`)
+| 값 | 설명 |
+|---|---|
+| `REPAIR_SHOP` | 공업사 |
+| `SUPPLIER` | 부품사 |
+| `DRIVER` | 장비기사 |
+| `ADMIN` | 관리자 |
 
-#### POST `/auth/sign-up/machine-driver`
-```typescript
-// Request
-{ email: string; password: string; role: string; phoneNumber: string; latitude?: number; longitude?: number; }
-// Response: ApiResponse<Member>
+### OrderStatus (주문 상태)
+
+| 값 | 설명 |
+|---|---|
+| `PENDING` | 대기중 |
+| `APPROVED` | 주문 승인 |
+| `SHIPPED` | 배송 완료 |
+| `CANCELED` | 취소됨 |
+
+### ReservationStatus (예약 상태)
+
+| 값 | 설명 |
+|---|---|
+| `PENDING` | 대기중 |
+| `APPROVED` | 승인됨 |
+| `COMPLETED` | 완료됨 |
+| `CANCELED` | 취소됨 |
+
+### PushPlatform (푸시 알림 플랫폼)
+
+| 값 | 설명 |
+|---|---|
+| `ANDROID` | 안드로이드 |
+| `WEB` | 웹 |
+
+### WorkLogPhotoType (작업일지 사진 타입)
+
+| 값 | 설명 |
+|---|---|
+| `WORK` | 작업 사진 |
+| `RENTAL_START` | 임대 시작 시점 |
+| `RENTAL_END` | 임대 종료 시점 |
+| `MAINTENANCE` | 정비 전/후 |
+
+---
+
+## 인증 API (`/auth`)
+
+### 기계운전자 회원가입
+
+```
+POST /auth/sign-up/machine-driver
 ```
 
-#### POST `/auth/sign-up/repair-shop`
+**Request Body:**
 ```typescript
-// Request
-{ email: string; password: string; role: string; phoneNumber: string; businessName: string; address: string; latitude: number; longitude: number; }
-// Response: ApiResponse<Member>
+{
+  email: string;       // 이메일 (필수, 이메일 형식)
+  password: string;    // 비밀번호 (필수)
+  role: string;        // 역할 (필수)
+  phoneNumber: string; // 전화번호 (필수)
+  latitude?: number;   // 위도 (선택)
+  longitude?: number;  // 경도 (선택)
+}
 ```
 
-#### POST `/auth/sign-up/supplier-company`
+**Response:**
 ```typescript
-// Request
-{ email: string; password: string; role: string; phoneNumber: string; businessName: string; address: string; }
-// Response: ApiResponse<Member>
+ApiResponse<Member>
 ```
 
-#### POST `/auth/login`
-```typescript
-// Request
-{ email: string; password: string; }
-// Response: ApiResponse<Member> + JSESSIONID 쿠키 설정
+---
+
+### 수리점(공업사) 회원가입
+
+```
+POST /auth/sign-up/repair-shop
 ```
 
-#### POST `/auth/logout`
+**Request Body:**
 ```typescript
-// Request: 없음 (세션 쿠키)
-// Response: 없음
+{
+  email: string;          // 이메일 (필수, 이메일 형식)
+  password: string;       // 비밀번호 (필수)
+  role: string;           // 역할 (필수)
+  phoneNumber: string;    // 전화번호 (필수)
+  businessName: string;   // 사업자명 (필수)
+  address: string;        // 주소 (필수)
+  latitude: number;       // 위도 (필수)
+  longitude: number;      // 경도 (필수)
+}
 ```
 
-#### DELETE `/auth/account`
+**Response:**
 ```typescript
-// Request: 없음 (세션 쿠키)
-// Response: ApiResponse<null>
-// Note: Soft Delete. 개인정보 익명화, 푸시 토큰 삭제
+ApiResponse<Member>
 ```
 
-### 사용자 API (`/user`)
+---
 
-#### GET `/user/me`
-```typescript
-// Response
-ApiResponse<{ email: string; roleType: RoleType; phoneNumber: string; businessName: string | null; }>
+### 공급사(부품사) 회원가입
+
+```
+POST /auth/sign-up/supplier-company
 ```
 
-### 부품 API (`/parts`)
-
-#### GET `/parts`
+**Request Body:**
 ```typescript
-// Response
-ApiResponse<Array<{ id: number; supplier: string; name: string; price: number; imageUrl: string | null; }>>
+{
+  email: string;          // 이메일 (필수, 이메일 형식)
+  password: string;       // 비밀번호 (필수)
+  role: string;           // 역할 (필수)
+  phoneNumber: string;    // 전화번호 (필수)
+  businessName: string;   // 사업자명 (필수)
+  address: string;        // 주소 (필수)
+}
 ```
 
-#### GET `/parts/search?keyword=&supplier=`
+**Response:**
 ```typescript
-// Response: 위와 동일
+ApiResponse<Member>
 ```
 
-#### GET `/parts/{id}`
-```typescript
-// Response
-ApiResponse<{ id: number; supplier: string; name: string; price: number; imageUrl: string | null; description: string; }>
+---
+
+### 로그인
+
+```
+POST /auth/login
 ```
 
-#### POST `/parts`
+**Request Body:**
 ```typescript
-// Request
-{ name: string; description: string; price: number; }
-// Response: ApiResponse<number> (생성된 부품 ID)
+{
+  email: string;    // 이메일 (필수, 이메일 형식)
+  password: string; // 비밀번호 (필수)
+}
 ```
 
-#### POST `/parts/{id}/image` (multipart/form-data)
+**Response:**
 ```typescript
-// Form Data: image (File - jpg, jpeg, png, webp)
-// Response: ApiResponse<string> (Cloudinary 이미지 URL)
+ApiResponse<Member>
 ```
 
-### 재고 API (`/inventory`)
+**Note:** 성공 시 `JSESSIONID` 쿠키가 설정됩니다. 이후 요청에서 이 쿠키를 사용하여 인증합니다.
 
-#### GET `/inventory?partName=&stock=`
-```typescript
-// Response
-ApiResponse<Array<{ inventoryId: number; productName: string; stock: number; }>>
+---
+
+### 로그아웃
+
+```
+POST /auth/logout
 ```
 
-#### PATCH `/inventory/{id}/consume`
-```typescript
-// Request
-{ consumeQuantity: number; }
-// Response: ApiResponse<boolean> (true면 안전 재고 이하)
+**Request:** 없음 (세션 쿠키 필요)
+
+**Response:** 없음
+
+---
+
+### 회원 탈퇴
+
+```
+DELETE /auth/account
 ```
 
-#### PATCH `/inventory/{id}/restock`
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request:** 없음
+
+**Response:**
 ```typescript
-// Request
-{ restockQuantity: number; }
-// Response: ApiResponse<null>
+ApiResponse<null>
 ```
 
-#### POST `/inventory`
-```typescript
-// Request
-{ productId: number; initQuantity: number; safetyQuantity?: number; }
-// Response: ApiResponse<number> (생성된 재고 ID)
+**Note:** Soft Delete 방식으로 처리됩니다. 개인정보는 익명화되며, 관련 푸시 토큰이 모두 삭제됩니다.
+
+---
+
+## 사용자 API (`/user`)
+
+### 내 정보 조회
+
+```
+GET /user/me
 ```
 
-### 주문 API (`/orders`)
+**Headers:** 세션 쿠키 필요 (로그인 상태)
 
-#### POST `/orders`
+**Response:**
 ```typescript
-// Request
-{ receiverName: string; phoneNumber: string; address: string; items: Array<{ productId: number; quantity: number; }>; }
-// Response
-ApiResponse<{ orderId: number; supplierName: string; orderedItems: Array<{ id: number; supplier: string; name: string; price: number; quantity: number; }>; totalAmount: number; orderStatus: OrderStatus; receiverName: string; phoneNumber: string; address: string; orderTime: string; }>
+ApiResponse<{
+  email: string;
+  roleType: RoleType;
+  phoneNumber: string;
+  businessName: string | null;
+}>
 ```
 
-#### GET `/orders`
-```typescript
-// Response
-ApiResponse<Array<{ id: number; title: string; totalAmount: number; orderStatus: OrderStatus; orderTime: string; }>>
+---
+
+## 부품 API (`/parts`)
+
+### 부품 목록 조회
+
+```
+GET /parts
 ```
 
-#### PATCH `/orders/{id}`
+**Response:**
 ```typescript
-// Response: OrderResponse (위와 동일한 구조)
+ApiResponse<Array<{
+  id: number;
+  supplier: string;  // 공급사명
+  name: string;      // 부품명
+  price: number;     // 가격 (BigDecimal)
+  imageUrl: string | null; // 이미지 URL
+}>>
 ```
 
-### 공급사 API (`/supplier`)
+---
 
-#### GET `/supplier/orders`
-```typescript
-// Response
-ApiResponse<Array<{ orderId: number; orderStatus: OrderStatus; orderedAt: string; receiverName: string; phoneNumber: string; address: string; items: Array<{ productId: number; productName: string; unitPrice: number; quantity: number; itemTotalAmount: number; }>; }>>
+### 부품 검색
+
+```
+GET /parts/search
 ```
 
-#### PATCH `/supplier/orders`
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `keyword` | string | 검색 키워드 (선택) |
+| `supplier` | string | 공급사명 (선택) |
+
+**Response:**
 ```typescript
-// Request
-{ orderId: number; toStatus: OrderStatus; }
-// Response: ApiResponse<null>
+ApiResponse<Array<{
+  id: number;
+  supplier: string;
+  name: string;
+  price: number;
+  imageUrl: string | null;
+}>>
 ```
 
-### 고객 API (`/customer`)
+---
 
-#### POST `/customer`
-```typescript
-// Request
-{ name: string; phoneNumber: string; }
-// Response: ApiResponse<number>
+### 부품 상세 조회
+
+```
+GET /parts/{id}
 ```
 
-#### GET `/customer`
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 부품 ID |
+
+**Response:**
 ```typescript
-// Response
-ApiResponse<Array<{ id: number; name: string; phoneNumber: string; driverId: number | null; }>>
+ApiResponse<{
+  id: number;
+  supplier: string;
+  name: string;
+  price: number;
+  imageUrl: string | null;
+  description: string;
+}>
 ```
 
-#### GET `/customer/{id}`
-```typescript
-// Response
-ApiResponse<{ id: number; name: string; phoneNumber: string; driverId: number | null; }>
+---
+
+### 부품 등록
+
+```
+POST /parts
 ```
 
-#### PUT `/customer/{id}`
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
 ```typescript
-// Request
-{ name?: string; phoneNumber?: string; }
-// Response: ApiResponse<null>
+{
+  name: string;        // 부품명 (필수)
+  description: string; // 설명 (필수)
+  price: number;       // 가격 (필수, 0 이상)
+}
 ```
 
-### 드라이버 API (`/driver`)
-
-#### GET `/driver/repair-shops?lat=&lng=&radius=`
+**Response:**
 ```typescript
-// Response
-ApiResponse<Array<{ id: number; businessName: string; address: string; phoneNumber: string; distanceKm: number; }>>
+ApiResponse<number>
+// message: "상품이 성공적으로 저장되었습니다."
+// data: 생성된 부품 ID
 ```
 
-#### GET `/driver/repair-shops/{shopId}`
-```typescript
-// Response
-ApiResponse<{ id: number; businessName: string; address: string; phoneNumber: string; latitude: number | null; longitude: number | null; }>
+---
+
+### 부품 이미지 업로드
+
+```
+POST /parts/{id}/image
 ```
 
-#### GET `/driver/repair-shops/{shopId}/slots?date=YYYY-MM-DD`
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 부품 ID |
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Content-Type:** `multipart/form-data`
+
+**Form Data:**
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `image` | File | 이미지 파일 (jpg, jpeg, png, webp) |
+
+**Response:**
 ```typescript
-// Response
-ApiResponse<Array<{ slotTime: string; available: boolean; }>>
+ApiResponse<string>
+// message: "이미지가 성공적으로 업로드되었습니다."
+// data: Cloudinary 이미지 URL
 ```
 
-### 예약 API (`/reservation`)
+---
 
-#### POST `/reservation`
-```typescript
-// Request
-{ repairShopId: number; time: string; memo?: string; }
-// Response: ApiResponse<number>
+## 재고 API (`/inventory`)
+
+### 내 재고 조회
+
+```
+GET /inventory
 ```
 
-#### GET `/reservation/repair-shop?date=YYYY-MM-DD`
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `partName` | string | 부품명 검색 (선택) |
+| `stock` | number | 재고 수량 필터 (선택) |
+
+**Response:**
 ```typescript
-// Response
-ApiResponse<Array<{ id: number; driverEmail: string; driverPhoneNumber: string; time: string; status: ReservationStatus; memo: string | null; }>>
+ApiResponse<Array<{
+  inventoryId: number;
+  productName: string;
+  stock: number;
+}>>
 ```
 
-#### GET `/reservation/repair-shop/{id}`
-```typescript
-// Response: 위와 동일 (단일 객체)
+---
+
+### 재고 차감
+
+```
+PATCH /inventory/{id}/consume
 ```
 
-#### GET `/reservation/repair-shop/customers/{driverId}`
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 재고(Inventory) ID |
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
 ```typescript
-// Response: 위와 동일 (배열)
+{
+  consumeQuantity: number; // 차감할 수량 (필수, 양수)
+}
 ```
 
-#### PATCH `/reservation/repair-shop/{id}`
+**Response:**
 ```typescript
-// Request
-{ status: ReservationStatus; }
-// Response: ApiResponse<null>
+ApiResponse<boolean>
+// message: "재고 차감 완료"
+// data: true면 안전 재고 이하, false면 정상
 ```
 
-#### GET `/reservation/driver`
-```typescript
-// Response
-ApiResponse<Array<{ id: number; shopName: string; shopPhoneNumber: string; time: string; status: ReservationStatus; memo: string | null; }>>
+---
+
+### 재고 입고
+
+```
+PATCH /inventory/{id}/restock
 ```
 
-#### GET `/reservation/driver/{id}`
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 재고(Inventory) ID |
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
 ```typescript
-// Response: 위와 동일 (단일 객체)
+{
+  restockQuantity: number; // 입고할 수량 (필수, 양수)
+}
 ```
 
-#### PATCH `/reservation/driver/{id}`
+**Response:**
 ```typescript
-// Request
-{ status: ReservationStatus; } // PENDING 또는 CANCELED만 가능
-// Response: ApiResponse<null>
+ApiResponse<null>
+// message: "재고 입고 완료"
 ```
 
-### 푸시 알림 API (`/push/token`)
+---
 
-#### POST `/push/token`
-```typescript
-// Request
-{ token: string; platform: PushPlatform; }
-// Response: ApiResponse<null>
+### 재고 생성
+
+```
+POST /inventory
 ```
 
-#### DELETE `/push/token?token=`
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
 ```typescript
-// Response: ApiResponse<null>
+{
+  productId: number;       // 상품 ID (필수)
+  initQuantity: number;    // 초기 수량 (필수, 양수)
+  safetyQuantity: number;  // 안전 재고 수량 (선택)
+}
 ```
 
-### 홈 API
-
-#### GET `/`
+**Response:**
 ```typescript
-// Response (로그인 됨)
-ApiResponse<{ email: string; roleType: RoleType; phoneNumber: string; businessName: string | null; }>
-// Response (로그인 안됨)
-{ success: false, message: "로그인이 필요한 사용자입니다.", data: null }
+ApiResponse<number>
+// data: 생성된 재고 ID
 ```
+
+---
+
+## 주문 API (`/orders`)
+
+### 주문 생성
+
+```
+POST /orders
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  receiverName: string; // 수령인명 (필수)
+  phoneNumber: string;  // 전화번호 (필수)
+  address: string;      // 배송 주소 (필수)
+  items: Array<{
+    productId: number;  // 상품 ID
+    quantity: number;   // 수량
+  }>;
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<{
+  orderId: number;
+  supplierName: string;
+  orderedItems: Array<{
+    id: number;
+    supplier: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }>;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  orderTime: string; // ISO 8601 형식 (LocalDateTime)
+}>
+```
+
+---
+
+### 내 주문 목록 조회
+
+```
+GET /orders
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  title: string;           // 예: "엔진오일 외 2건"
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  orderTime: string;       // ISO 8601 형식
+}>>
+```
+
+---
+
+### 주문 취소
+
+```
+PATCH /orders/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 주문 ID |
+
+**Response:**
+```typescript
+ApiResponse<{
+  orderId: number;
+  supplierName: string;
+  orderedItems: Array<{
+    id: number;
+    supplier: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }>;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  orderTime: string;
+}>
+```
+
+---
+
+## 공급사 API (`/supplier`)
+
+> 공급사(SUPPLIER) 역할만 접근 가능
+
+### 내 주문 목록 조회 (공급사용)
+
+```
+GET /supplier/orders
+```
+
+**Headers:** 세션 쿠키 필요 (공급사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  orderId: number;
+  orderStatus: OrderStatus;
+  orderedAt: string;     // ISO 8601 형식
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  items: Array<{
+    productId: number;
+    productName: string;
+    unitPrice: number;
+    quantity: number;
+    itemTotalAmount: number;
+  }>;
+}>>
+```
+
+---
+
+### 주문 상태 변경 (공급사용)
+
+```
+PATCH /supplier/orders
+```
+
+**Headers:** 세션 쿠키 필요 (공급사 로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  orderId: number;       // 주문 ID
+  toStatus: OrderStatus; // 변경할 상태 (예: "APPROVED", "SHIPPED")
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<null>
+// message: "상태 변경 완료"
+```
+
+---
+
+## 고객 API (`/customer`)
+
+> 공업사(REPAIR_SHOP) 역할의 고객 관리 API
+
+### 고객 등록
+
+```
+POST /customer
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  name: string;        // 고객명 (필수)
+  phoneNumber: string; // 전화번호 (선택)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<number>
+// message: "고객 등록 완료", data: 생성된 고객 ID
+```
+
+---
+
+### 내 고객 목록 조회
+
+```
+GET /customer
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  name: string;
+  phoneNumber: string;
+  driverId: number | null; // 수동 등록 고객은 null
+}>>
+```
+
+---
+
+### 고객 상세 조회
+
+```
+GET /customer/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 고객 ID |
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<{
+  id: number;
+  name: string;
+  phoneNumber: string;
+  driverId: number | null; // 수동 등록 고객은 null
+}>
+```
+
+---
+
+### 고객 정보 수정
+
+```
+PUT /customer/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 고객 ID |
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  name: string;        // 변경할 이름 (선택, 값이 있으면 변경)
+  phoneNumber: string; // 변경할 전화번호 (선택, 값이 있으면 변경)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<null>
+// message: "업데이트 성공"
+```
+
+---
+
+## 드라이버 API (`/driver`)
+
+> 장비기사(DRIVER) 역할만 접근 가능
+
+### 근처 공업사 목록 조회
+
+```
+GET /driver/repair-shops
+```
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `lat` | number | 현재 위치 위도 (필수) |
+| `lng` | number | 현재 위치 경도 (필수) |
+| `radius` | number | 검색 반경 km (선택, 기본값: 50) |
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  businessName: string;  // 공업사명
+  address: string;       // 주소
+  phoneNumber: string;   // 전화번호
+  distanceKm: number;    // 현재 위치로부터의 거리 (km, 소수점 1자리)
+}>>
+```
+
+**Note:** 결과는 거리 가까운 순으로 정렬됩니다. 위치 정보가 없는 공업사는 목록에서 제외됩니다.
+
+---
+
+### 공업사 상세 조회
+
+```
+GET /driver/repair-shops/{shopId}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `shopId` | number | 공업사 ID |
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<{
+  id: number;
+  businessName: string;
+  address: string;
+  phoneNumber: string;
+  latitude: number | null;
+  longitude: number | null;
+}>
+```
+
+---
+
+### 예약 가능 시간대 조회
+
+```
+GET /driver/repair-shops/{shopId}/slots
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `shopId` | number | 공업사 ID |
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `date` | string | 조회할 날짜 (필수, `YYYY-MM-DD` 형식) |
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  slotTime: string;   // 시간대 (ISO 8601 형식, 예: "2026-03-19T09:00:00")
+  available: boolean; // 예약 가능 여부 (PENDING/APPROVED 상태 예약 있으면 false)
+}>>
+```
+
+**Note:** 운영시간은 09:00 ~ 17:00 (1시간 단위, 총 9슬롯)입니다. CANCELED 상태의 예약은 슬롯을 차지하지 않습니다.
+
+---
+
+## 예약 API (`/reservation`)
+
+### 예약 등록 (장비기사)
+
+```
+POST /reservation
+```
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  repairShopId: number;  // 공업사 ID (필수)
+  time: string;          // 예약 시간 (필수, ISO 8601 형식)
+  memo?: string;         // 메모 (선택)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<number>
+// data: 생성된 예약 ID
+```
+
+---
+
+### 공업사 예약 목록 조회
+
+```
+GET /reservation/repair-shop
+```
+
+**Headers:** 세션 쿠키 필요 (공업사 로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `date` | string | 날짜 필터 (선택, `YYYY-MM-DD` 형식). 지정 시 해당 날짜 예약만 반환 |
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  driverEmail: string;
+  driverPhoneNumber: string;
+  time: string;                  // ISO 8601 형식
+  status: ReservationStatus;
+  memo: string | null;
+}>>
+```
+
+---
+
+### 공업사 예약 상세 조회
+
+```
+GET /reservation/repair-shop/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 예약 ID |
+
+**Headers:** 세션 쿠키 필요 (공업사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<{
+  id: number;
+  driverEmail: string;
+  driverPhoneNumber: string;
+  time: string;
+  status: ReservationStatus;
+  memo: string | null;
+}>
+```
+
+---
+
+### 공업사 - 특정 고객 예약 목록 조회
+
+```
+GET /reservation/repair-shop/customers/{driverId}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `driverId` | number | 고객(장비기사) ID |
+
+**Headers:** 세션 쿠키 필요 (공업사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  driverEmail: string;
+  driverPhoneNumber: string;
+  time: string;                  // ISO 8601 형식
+  status: ReservationStatus;
+  memo: string | null;
+}>>
+```
+
+---
+
+### 공업사 예약 상태 변경
+
+```
+PATCH /reservation/repair-shop/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 예약 ID |
+
+**Headers:** 세션 쿠키 필요 (공업사 로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  status: ReservationStatus; // 변경할 상태 (필수)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+---
+
+### 장비기사 예약 목록 조회
+
+```
+GET /reservation/driver
+```
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<Array<{
+  id: number;
+  shopName: string;
+  shopPhoneNumber: string;
+  time: string;                  // ISO 8601 형식
+  status: ReservationStatus;
+  memo: string | null;
+}>>
+```
+
+---
+
+### 장비기사 예약 상세 조회
+
+```
+GET /reservation/driver/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 예약 ID |
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Response:**
+```typescript
+ApiResponse<{
+  id: number;
+  shopName: string;
+  shopPhoneNumber: string;
+  time: string;
+  status: ReservationStatus;
+  memo: string | null;
+}>
+```
+
+---
+
+### 장비기사 예약 상태 변경
+
+```
+PATCH /reservation/driver/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 예약 ID |
+
+**Headers:** 세션 쿠키 필요 (장비기사 로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  status: ReservationStatus; // PENDING 또는 CANCELED만 가능
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+---
+
+## 푸시 알림 API (`/push/token`)
+
+### 푸시 토큰 등록
+
+```
+POST /push/token
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  token: string;        // FCM 토큰 (필수)
+  platform: PushPlatform; // 플랫폼 (필수, "ANDROID" | "WEB")
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<null>
+// message: "푸시 토큰 등록 완료"
+```
+
+**Note:** 동일한 토큰이 이미 등록된 경우 중복 저장하지 않습니다.
+
+---
+
+### 푸시 토큰 삭제
+
+```
+DELETE /push/token
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `token` | string | 삭제할 FCM 토큰 (필수) |
+
+**Response:**
+```typescript
+ApiResponse<null>
+// message: "푸시 토큰 삭제 완료"
+```
+
+---
+
+## 작업일지 API (`/worklog`)
+
+장비기사가 일일 작업기록(현장·내용·가동시간·사진)을 남기고 월말 정산·임대 분쟁 증빙에 활용합니다. 모든 엔드포인트는 본인 작업일지만 접근 가능합니다.
+
+### 작업일지 등록
+
+```
+POST /worklog
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Request Body:**
+```typescript
+{
+  location: string;          // 현장명 (필수, 공백 불가, 최대 200자)
+  dateTime: string;          // 작업 일시 (필수, ISO LocalDateTime)
+  description?: string;      // 작업 내용 (선택, 최대 1000자)
+  workingHour: number;       // 가동시간 (필수, 0.0 이상, 소수 1자리, 시간계 단위)
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<number>  // 생성된 작업일지 ID
+```
+
+---
+
+### 내 작업일지 목록 조회
+
+```
+GET /worklog
+```
+
+**Headers:** 세션 쿠키 필요 (로그인 상태)
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `from` | string (YYYY-MM-DD) | 조회 시작일 (선택, 기본: 금월 1일) |
+| `to` | string (YYYY-MM-DD) | 조회 종료일 (선택, 기본: 오늘) |
+| `page` | number | 페이지 번호 (선택, 0부터, 기본 0) |
+| `size` | number | 페이지 크기 (선택, 기본 20) |
+| `sort` | string | 정렬 (선택, 기본 `dateTime,desc`) |
+
+**Response:**
+```typescript
+ApiResponse<Page<WorkLogResponse>>
+```
+
+`Page<T>`는 Spring Data 표준 페이징 응답 구조입니다 (TypeScript 타입 정의 참고).
+
+---
+
+### 작업일지 단건 조회
+
+```
+GET /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Response:**
+```typescript
+ApiResponse<WorkLogResponse>
+```
+
+본인 작업일지가 아니면 401, 없으면 404.
+
+---
+
+### 작업일지 수정
+
+```
+PATCH /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Request Body:** 등록과 동일 (전체 덮어쓰기)
+```typescript
+{
+  location: string;
+  dateTime: string;
+  description?: string;
+  workingHour: number;
+}
+```
+
+**Response:**
+```typescript
+ApiResponse<WorkLogResponse>  // 수정 후 결과
+```
+
+---
+
+### 작업일지 삭제
+
+```
+DELETE /worklog/{id}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+**Note:** 첨부된 사진 row도 함께 삭제됩니다 (Cloudinary 원본 파일은 남음).
+
+---
+
+### 작업일지 사진 업로드
+
+```
+POST /worklog/{id}/photos
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `id` | number | 작업일지 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지)
+
+**Content-Type:** `multipart/form-data`
+
+**Query Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `type` | WorkLogPhotoType | 사진 타입 (필수, `WORK` / `RENTAL_START` / `RENTAL_END` / `MAINTENANCE`). 한 요청의 모든 파일에 동일 적용. |
+
+**Form Data:**
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `files` | File[] | 이미지 파일 (jpg, jpeg, png, webp). 한 요청당 최대 10장. |
+
+**Response:**
+```typescript
+ApiResponse<WorkLogPhotoResponse[]>  // 새로 추가된 사진 목록
+```
+
+---
+
+### 작업일지 사진 삭제
+
+```
+DELETE /worklog/photos/{photoId}
+```
+
+**Path Parameters:**
+| 파라미터 | 타입 | 설명 |
+|---------|------|------|
+| `photoId` | number | 사진 ID |
+
+**Headers:** 세션 쿠키 필요 (본인 작업일지의 사진)
+
+**Response:**
+```typescript
+ApiResponse<null>
+```
+
+---
+
+## 홈 API
+
+### 홈 (로그인 상태 확인)
+
+```
+GET /
+```
+
+**Response (로그인 됨):**
+```typescript
+ApiResponse<{
+  email: string;
+  roleType: RoleType;
+  phoneNumber: string;
+  businessName: string | null;
+}>
+// message: "로그인이 된 사용자입니다."
+```
+
+**Response (로그인 안됨):**
+```typescript
+{
+  success: false,
+  message: "로그인이 필요한 사용자입니다.",
+  data: null
+}
+```
+
+---
+
+## 에러 응답
+
+모든 에러는 다음 형식으로 반환됩니다:
+
+```typescript
+{
+  success: false,
+  message: "에러 메시지",
+  data: null
+}
+```
+
+### 일반적인 에러 메시지
+
+| 상황 | 메시지 |
+|------|--------|
+| 로그인 필요 | "로그인이 필요합니다." 또는 "다시 로그인 해주세요." |
+| 권한 없음 | "접근 권한이 없습니다." |
+
+---
+
+## TypeScript 타입 정의 (참고용)
+
+```typescript
+// Enum Types
+type RoleType = 'REPAIR_SHOP' | 'SUPPLIER' | 'DRIVER' | 'ADMIN';
+type OrderStatus = 'PENDING' | 'APPROVED' | 'SHIPPED' | 'CANCELED';
+type ReservationStatus = 'PENDING' | 'APPROVED' | 'COMPLETED' | 'CANCELED';
+
+// Common
+interface ApiResponse<T> {
+  success: boolean;
+  message: string | null;
+  data: T | null;
+}
+
+// Member
+interface MemberResponse {
+  email: string;
+  roleType: RoleType;
+  phoneNumber: string;
+  businessName: string | null;
+}
+
+// Parts
+interface Part {
+  id: number;
+  supplier: string;
+  name: string;
+  price: number;
+  imageUrl: string | null;
+}
+
+interface PartDetail extends Part {
+  description: string;
+}
+
+interface PartRegister {
+  name: string;
+  description: string;
+  price: number;
+}
+
+interface ProductSearch {
+  keyword?: string;
+  supplier?: string;
+}
+
+// Inventory
+interface Inventory {
+  inventoryId: number;
+  productName: string;
+  stock: number;
+}
+
+interface InventorySearch {
+  partName?: string;
+  stock?: number;
+}
+
+interface InventoryConsume {
+  consumeQuantity: number;
+}
+
+interface InventoryRestock {
+  restockQuantity: number;
+}
+
+interface InventoryMake {
+  productId: number;
+  initQuantity: number;
+  safetyQuantity?: number;
+}
+
+// Order
+interface OrderItem {
+  productId: number;
+  quantity: number;
+}
+
+interface OrderRequest {
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  items: OrderItem[];
+}
+
+interface OrderItemResponse {
+  id: number;
+  supplier: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface OrderResponse {
+  orderId: number;
+  supplierName: string;
+  orderedItems: OrderItemResponse[];
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  orderTime: string;
+}
+
+interface MyOrder {
+  id: number;
+  title: string;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  orderTime: string;
+}
+
+// Supplier Order
+interface SupplierOrderItem {
+  productId: number;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  itemTotalAmount: number;
+}
+
+interface SupplierOrder {
+  orderId: number;
+  orderStatus: OrderStatus;
+  orderedAt: string;
+  receiverName: string;
+  phoneNumber: string;
+  address: string;
+  items: SupplierOrderItem[];
+}
+
+interface ChangeOrderStatus {
+  orderId: number;
+  toStatus: OrderStatus;
+}
+
+// Driver
+interface RepairShopListItem {
+  id: number;
+  businessName: string;
+  address: string;
+  phoneNumber: string;
+  distanceKm: number;
+}
+
+interface RepairShopDetail {
+  id: number;
+  businessName: string;
+  address: string;
+  phoneNumber: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+interface AvailableSlot {
+  slotTime: string;
+  available: boolean;
+}
+
+// Reservation
+interface ReservationRequest {
+  repairShopId: number;
+  time: string;
+  memo?: string;
+}
+
+interface ReservationShopResponse {
+  id: number;
+  driverEmail: string;
+  driverPhoneNumber: string;
+  time: string;
+  status: ReservationStatus;
+  memo: string | null;
+}
+
+interface ReservationDriverResponse {
+  id: number;
+  shopName: string;
+  shopPhoneNumber: string;
+  time: string;
+  status: ReservationStatus;
+  memo: string | null;
+}
+
+interface ChangeReservationStatus {
+  status: ReservationStatus;
+}
+
+// Customer
+interface CustomerRequest {
+  name: string;
+  phoneNumber: string;
+}
+
+interface CustomerResponse {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  driverId: number | null; // 수동 등록 고객은 null
+}
+
+interface CustomerUpdate {
+  name?: string;
+  phoneNumber?: string;
+}
+
+// Push Notification
+type PushPlatform = 'ANDROID' | 'WEB';
+
+interface PushTokenRequest {
+  token: string;
+  platform: PushPlatform;
+}
+
+// Auth
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface MachineDriverSignUp {
+  email: string;
+  password: string;
+  role: string;
+  phoneNumber: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+interface RepairShopSignUp extends MachineDriverSignUp {
+  businessName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface SupplierCompanySignUp extends MachineDriverSignUp {
+  businessName: string;
+  address: string;
+}
+
+// WorkLog
+type WorkLogPhotoType = 'WORK' | 'RENTAL_START' | 'RENTAL_END' | 'MAINTENANCE';
+
+interface WorkLogRequest {
+  location: string;
+  dateTime: string;        // ISO LocalDateTime
+  description?: string;
+  workingHour: number;     // 소수 1자리 (시간계 단위)
+}
+
+interface WorkLogPhotoResponse {
+  id: number;
+  url: string;
+  type: WorkLogPhotoType;
+  takenAt: string | null;  // ISO LocalDateTime
+  createdAt: string;       // ISO LocalDateTime
+}
+
+interface WorkLogResponse {
+  id: number;
+  writerEmail: string;
+  location: string;
+  dateTime: string;
+  description: string | null;
+  workingHour: number;
+  createdAt: string;
+  updatedAt: string;
+  photos: WorkLogPhotoResponse[];
+}
+
+// Spring Data Page<T> 응답 구조 (페이징 엔드포인트 공통)
+interface Page<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  number: number;
+  size: number;
+  numberOfElements: number;
+  sort: { sorted: boolean; unsorted: boolean; empty: boolean };
+  empty: boolean;
+}
+```
+
+---
+
+## API 엔드포인트 요약표
+
+| 메서드 | 경로 | 설명 | 인증 |
+|--------|------|------|------|
+| GET | `/` | 홈 (로그인 상태 확인) | 선택 |
+| POST | `/auth/sign-up/machine-driver` | 기계운전자 회원가입 | X |
+| POST | `/auth/sign-up/repair-shop` | 수리점 회원가입 | X |
+| POST | `/auth/sign-up/supplier-company` | 공급사 회원가입 | X |
+| POST | `/auth/login` | 로그인 | X |
+| POST | `/auth/logout` | 로그아웃 | O |
+| DELETE | `/auth/account` | 회원 탈퇴 | O |
+| GET | `/user/me` | 내 정보 조회 | O |
+| GET | `/parts` | 부품 목록 조회 | X |
+| GET | `/parts/search` | 부품 검색 | X |
+| GET | `/parts/{id}` | 부품 상세 조회 | X |
+| POST | `/parts` | 부품 등록 | O |
+| POST | `/parts/{id}/image` | 부품 이미지 업로드 | O |
+| GET | `/inventory` | 내 재고 조회 | O |
+| PATCH | `/inventory/{id}/consume` | 재고 차감 | O |
+| PATCH | `/inventory/{id}/restock` | 재고 입고 | O |
+| POST | `/inventory` | 재고 생성 | O |
+| POST | `/orders` | 주문 생성 | O |
+| GET | `/orders` | 내 주문 목록 조회 | O |
+| PATCH | `/orders/{id}` | 주문 취소 | O |
+| GET | `/supplier/orders` | 공급사 주문 목록 조회 | O (공급사만) |
+| PATCH | `/supplier/orders` | 주문 상태 변경 | O (공급사만) |
+| POST | `/customer` | 고객 등록 | O |
+| GET | `/customer` | 내 고객 목록 조회 | O |
+| GET | `/customer/{id}` | 고객 상세 조회 | O |
+| PUT | `/customer/{id}` | 고객 정보 수정 | O |
+| GET | `/driver/repair-shops` | 근처 공업사 목록 조회 | O (장비기사) |
+| GET | `/driver/repair-shops/{shopId}` | 공업사 상세 조회 | O (장비기사) |
+| GET | `/driver/repair-shops/{shopId}/slots` | 예약 가능 시간대 조회 | O (장비기사) |
+| POST | `/reservation` | 예약 등록 | O (장비기사) |
+| GET | `/reservation/repair-shop` | 공업사 예약 목록 조회 (date 필터 선택) | O (공업사) |
+| GET | `/reservation/repair-shop/{id}` | 공업사 예약 상세 조회 | O (공업사) |
+| GET | `/reservation/repair-shop/customers/{driverId}` | 공업사 - 특정 고객 예약 목록 조회 | O (공업사) |
+| PATCH | `/reservation/repair-shop/{id}` | 공업사 예약 상태 변경 | O (공업사) |
+| GET | `/reservation/driver` | 장비기사 예약 목록 조회 | O (장비기사) |
+| GET | `/reservation/driver/{id}` | 장비기사 예약 상세 조회 | O (장비기사) |
+| PATCH | `/reservation/driver/{id}` | 장비기사 예약 상태 변경 | O (장비기사) |
+| POST | `/push/token` | 푸시 토큰 등록 | O |
+| DELETE | `/push/token` | 푸시 토큰 삭제 | O |
+| POST | `/worklog` | 작업일지 등록 | O |
+| GET | `/worklog` | 내 작업일지 목록 조회 (기간·페이징) | O |
+| GET | `/worklog/{id}` | 작업일지 단건 조회 | O (본인) |
+| PATCH | `/worklog/{id}` | 작업일지 수정 | O (본인) |
+| DELETE | `/worklog/{id}` | 작업일지 삭제 | O (본인) |
+| POST | `/worklog/{id}/photos` | 작업일지 사진 업로드 | O (본인) |
+| DELETE | `/worklog/photos/{photoId}` | 작업일지 사진 삭제 | O (본인) |
